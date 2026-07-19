@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>안녕하세요</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+      :root { color: #182021; background: #fbf8f1; font-family: "DM Sans", "Noto Sans KR", sans-serif; }
+      * { box-sizing: border-box; }
+      body { min-height: 100vh; margin: 0; overflow: hidden; }
+      main { min-height: 100vh; padding: 28px clamp(24px, 7vw, 112px); display: grid; grid-template-rows: auto 1fr auto; }
+      nav { display: flex; align-items: center; justify-content: space-between; font-size: 14px; }
+      .logo { font-weight: 700; letter-spacing: -.04em; font-size: 18px; }
+      .status { display: flex; gap: 8px; align-items: center; color: #5d6865; }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: #ef6e4a; box-shadow: 0 0 0 5px #f9ded4; }
+      .hero { display: grid; align-content: center; position: relative; max-width: 870px; }
+      .eyebrow { color: #ef6e4a; font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 18px; }
+      h1 { font-size: clamp(60px, 11vw, 154px); line-height: .91; letter-spacing: -.085em; margin: 0; font-weight: 700; }
+      h1 span { color: #ef6e4a; }
+      .message { max-width: 440px; color: #5d6865; font-size: clamp(16px, 1.8vw, 20px); line-height: 1.7; margin: 30px 0 34px; }
+      button { width: fit-content; appearance: none; border: 0; border-radius: 999px; padding: 15px 22px; background: #182021; color: white; cursor: pointer; font: inherit; font-weight: 700; transition: transform .2s, background .2s; }
+      button:hover { background: #ef6e4a; transform: translateY(-2px); }
+      .orb { position: absolute; width: clamp(150px, 23vw, 270px); aspect-ratio: 1; right: 3%; top: 19%; border-radius: 50%; background: #f2bd4d; mix-blend-mode: multiply; animation: float 5s ease-in-out infinite; }
+      .orb::after { content: "🙂"; display: grid; place-items: center; width: 100%; height: 100%; font-size: clamp(72px, 12vw, 135px); mix-blend-mode: normal; }
+      footer { display: flex; justify-content: space-between; color: #76807d; font-size: 13px; }
+      @keyframes float { 50% { transform: translateY(-16px) rotate(5deg); } }
+      @media (max-width: 650px) { .orb { right: 0; top: 12%; opacity: .78; } .hero { padding-top: 48px; } footer { gap: 12px; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <nav><div class="logo">hello, world.</div><div class="status"><i class="dot"></i> 오늘도 반가워요</div></nav>
+      <section class="hero">
+        <div class="orb" aria-hidden="true"></div>
+        <p class="eyebrow">A small, happy greeting</p>
+        <h1>안녕,<br /><span>반가워요.</span></h1>
+        <p class="message" id="message">오늘의 첫 인사를 건넵니다. 잠깐 들러도 좋은 기분을 남기는 작은 웹사이트예요.</p>
+        <button id="greet" type="button">인사 받기 →</button>
+      </section>
+      <footer><span>2026 © HELLO</span><span id="clock"></span></footer>
+    </main>
+    <script>
+      const messages = [
+        '오늘의 첫 인사를 건넵니다. 잠깐 들러도 좋은 기분을 남기는 작은 웹사이트예요.',
+        '반가워요! 오늘도 당신만의 속도로 멋지게 걸어가 보세요.',
+        '좋은 하루는 작은 인사에서 시작될지도 몰라요. :)'
+      ];
+      let current = 0;
+      document.getElementById('greet').addEventListener('click', () => {
+        current = (current + 1) % messages.length;
+        document.getElementById('message').textContent = messages[current];
+      });
+      const clock = document.getElementById('clock');
+      const updateClock = () => clock.textContent = new Intl.DateTimeFormat('ko-KR', { hour: '2-digit', minute: '2-digit' }).format(new Date());
+      updateClock(); setInterval(updateClock, 1000);
+    </script>
+  </body>
+</html>
