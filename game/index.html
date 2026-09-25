@@ -44,7 +44,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .title-body{display:flex;flex-direction:column;gap:18px;padding-top:6px;min-width:0}
 .seal{width:64px;height:64px;border:3px solid var(--dan);color:var(--dan-hi);display:grid;place-items:center;
   font-family:'Song Myung',serif;font-size:24px;line-height:1;letter-spacing:.05em;transform:rotate(-4deg);
-  writing-mode:vertical-rl;padding:4px;background:rgba(168,55,42,.08)}
+  flex-direction:column;display:flex;align-items:center;justify-content:center;gap:2px;padding:4px;background:rgba(168,55,42,.08)}
 .era{margin:0;font-size:13px;letter-spacing:.18em;color:var(--gold)}
 .lede{margin:0;font-size:clamp(17px,2.4vw,21px);line-height:1.65;max-width:30em;text-wrap:balance}
 .controls{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0;font-size:13px;color:var(--hanji-dim)}
@@ -145,7 +145,7 @@ body.tm #topBtns{display:flex}
   <div class="title-wrap">
     <h1 class="vtitle">경신역귀록</h1>
     <div class="title-body">
-      <div class="seal" aria-hidden="true">庚辛</div>
+      <div class="seal" aria-hidden="true"><span>庚</span><span>辛</span></div>
       <p class="era">현종 11년 · 경술년 · 1670</p>
       <p class="lede">여름에 서리가 내린 해였다. 묻히지 못한 주검들이 밤마다 일어나 걷기 시작했다.</p>
       <div class="row"><button id="startBtn" class="btn primary">밀지를 받든다</button></div>
@@ -219,12 +219,12 @@ body.tm #topBtns{display:flex}
 <div id="touch" hidden>
   <div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
   <button class="tb" data-a="atk" style="right:16px;bottom:16px;width:78px;height:78px;font-size:30px">斬</button>
-  <button class="tb" data-a="tal" style="right:128px;bottom:28px;width:54px;height:54px">符<i class="cd"></i></button>
-  <button class="tb" data-a="spin" style="right:115px;bottom:78px;width:54px;height:54px">旋<i class="cd"></i></button>
-  <button class="tb" data-a="bolt" style="right:78px;bottom:115px;width:54px;height:54px">雷<i class="cd"></i></button>
-  <button class="tb" data-a="judg" style="right:28px;bottom:128px;width:54px;height:54px">天<i class="cd"></i></button>
-  <button class="tb" data-a="roll" style="right:196px;bottom:18px;width:52px;height:52px">轉<i class="cd"></i></button>
-  <button class="tb" data-a="flask" style="right:24px;bottom:196px;width:48px;height:48px">藥<i class="cd"></i><span class="c" id="flaskC">3</span></button>
+  <button class="tb" data-a="tal" style="right:140px;bottom:28px;width:54px;height:54px">符<i class="cd"></i></button>
+  <button class="tb" data-a="spin" style="right:125px;bottom:84px;width:54px;height:54px">旋<i class="cd"></i></button>
+  <button class="tb" data-a="bolt" style="right:84px;bottom:125px;width:54px;height:54px">雷<i class="cd"></i></button>
+  <button class="tb" data-a="judg" style="right:28px;bottom:140px;width:54px;height:54px">天<i class="cd"></i></button>
+  <button class="tb" data-a="roll" style="right:210px;bottom:18px;width:52px;height:52px">轉<i class="cd"></i></button>
+  <button class="tb" data-a="flask" style="right:24px;bottom:210px;width:48px;height:48px">藥<i class="cd"></i><span class="c" id="flaskC">3</span></button>
 </div>
 
 <script>
@@ -301,7 +301,6 @@ const keys={},mouse={x:0,y:0,l:false,r:false};
 const joy={x:0,y:0,id:null,ox:0,oy:0},hold={atk:false,tal:false};
 let TM=false;
 function setTM(v){TM=v;document.body.classList.toggle('tm',v);syncUI()}
-if(matchMedia('(pointer:coarse)').matches)setTM(true);
 addEventListener('pointerdown',e=>{if(e.pointerType==='touch'&&!TM)setTM(true);else if(e.pointerType==='mouse'&&TM)setTM(false)},true);
 addEventListener('keydown',e=>{
   if((state==='play'||state==='inv')&&['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Tab'].includes(e.code))e.preventDefault();
@@ -1192,6 +1191,7 @@ function frame(t){
   try{if(G&&G.map&&state==='play')update(dt);render(dt);updTouchUI()}catch(err){console.error(err)}
   requestAnimationFrame(frame);
 }
+if(matchMedia('(pointer:coarse)').matches)setTM(true);
 syncUI();requestAnimationFrame(frame);
 </script>
 </body>
