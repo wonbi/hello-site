@@ -43,7 +43,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
   text-shadow:0 0 28px rgba(168,55,42,.35);flex:none}
 .title-body{display:flex;flex-direction:column;gap:18px;padding-top:6px;min-width:0}
 .seal{width:64px;height:64px;border:3px solid var(--dan);color:var(--dan-hi);display:grid;place-items:center;
-  font-family:'Song Myung',serif;font-size:24px;line-height:1;letter-spacing:.05em;transform:rotate(-4deg);
+  font-family:'Song Myung',serif;font-size:22px;line-height:1;letter-spacing:.05em;transform:rotate(-4deg);
   flex-direction:column;display:flex;align-items:center;justify-content:center;gap:2px;padding:4px;background:rgba(168,55,42,.08)}
 .era{margin:0;font-size:13px;letter-spacing:.18em;color:var(--gold)}
 .lede{margin:0;font-size:clamp(17px,2.4vw,21px);line-height:1.65;max-width:30em;text-wrap:balance}
@@ -57,7 +57,7 @@ body.tm .desk-only{display:none}
 
 /* story */
 .story{max-width:620px;width:100%;display:flex;flex-direction:column;gap:18px}
-.story .mark{font-family:'Song Myung',serif;font-size:44px;color:var(--dan-hi);line-height:1}
+.story .mark{font-family:'Song Myung',serif;font-size:30px;color:var(--dan-hi);line-height:1}
 .story h2{margin:0;font-family:'Song Myung',serif;font-weight:400;font-size:clamp(26px,4.4vw,36px);letter-spacing:.04em;text-wrap:balance}
 .story .sub{margin:-8px 0 0;font-size:13px;letter-spacing:.14em;color:var(--gold)}
 .story p.body{margin:0;font-size:clamp(16px,2.2vw,18px);line-height:1.9;color:var(--hanji)}
@@ -71,7 +71,7 @@ body.tm .desk-only{display:none}
 .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;width:100%}
 .choice{display:flex;flex-direction:column;gap:8px;text-align:left;padding:18px;background:var(--ink2);border:1px solid var(--line);cursor:pointer}
 .choice:hover,.choice:focus-visible{border-color:var(--gold);background:var(--ink3)}
-.choice .h{font-family:'Song Myung',serif;font-size:36px;color:var(--gold);line-height:1}
+.choice .h{font-family:'Song Myung',serif;font-size:28px;color:var(--gold);line-height:1}
 .choice b{font-size:17px}
 .choice span{font-size:13.5px;color:var(--hanji-dim);line-height:1.5}
 .choice small{font-size:12px;color:var(--celadon)}
@@ -87,7 +87,7 @@ body.tm .desk-only{display:none}
 .bag{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .cell{aspect-ratio:1;max-width:100%;background:var(--ink2);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:2px;cursor:pointer;padding:2px;min-width:0}
-.cell .g{font-family:'Song Myung',serif;font-size:22px;line-height:1}
+.cell .g{font-family:'Song Myung',serif;font-size:15px;white-space:nowrap;line-height:1}
 .cell .n{font-size:10.5px;line-height:1.1;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100%}
 .cell.empty{cursor:default;opacity:.45}
 .cell.sel{outline:2px solid var(--gold);outline-offset:-2px}
@@ -130,7 +130,7 @@ body.tm #topBtns{display:flex}
   background:rgba(10,9,8,.25);left:90px;bottom:auto;top:auto}
 #joyKnob{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(220,207,178,.35)}
 .tb{position:absolute;pointer-events:auto;border-radius:50%;border:1px solid rgba(198,160,82,.6);background:rgba(14,12,10,.62);
-  font-family:'Song Myung',serif;font-size:22px;display:grid;place-items:center;overflow:hidden;padding:0}
+  font-family:'Song Myung',serif;font-size:17px;display:grid;place-items:center;overflow:hidden;padding:0}
 .tb .cd{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(0,0,0,.6)}
 .tb .c{position:absolute;right:6px;bottom:4px;font-family:'Gowun Batang',serif;font-size:11px}
 .tb.off{opacity:.45}
@@ -145,7 +145,7 @@ body.tm #topBtns{display:flex}
   <div class="title-wrap">
     <h1 class="vtitle">경신역귀록</h1>
     <div class="title-body">
-      <div class="seal" aria-hidden="true"><span>庚</span><span>辛</span></div>
+      <div class="seal" aria-hidden="true"><span>경</span><span>신</span></div>
       <p class="era">현종 11년 · 경술년 · 1670</p>
       <p class="lede">여름에 서리가 내린 해였다. 묻히지 못한 주검들이 밤마다 일어나 걷기 시작했다.</p>
       <div class="row"><button id="startBtn" class="btn primary">밀지를 받든다</button></div>
@@ -185,7 +185,7 @@ body.tm #topBtns{display:flex}
 
 <section id="pause" class="screen clear" hidden>
   <div class="story" style="max-width:360px">
-    <div class="mark">止</div>
+    <div class="mark">멈춤</div>
     <h2>잠시 숨을 고른다</h2>
     <div style="display:flex;flex-direction:column;gap:10px">
       <button class="btn primary" id="resumeBtn">계속하기</button>
@@ -197,7 +197,7 @@ body.tm #topBtns{display:flex}
 
 <section id="dead" class="screen" hidden>
   <div class="story" style="max-width:420px">
-    <div class="mark">死</div>
+    <div class="mark">쓰러짐</div>
     <h2>당신은 쓰러졌다</h2>
     <p class="body">흙냄새와 쇠냄새가 섞였다. 그러나 밀지는 아직 품 안에 있다.</p>
     <div class="row"><button class="btn primary" id="reviveBtn">다시 일어선다</button><button class="btn" id="quit2Btn">처음으로</button></div>
@@ -218,13 +218,13 @@ body.tm #topBtns{display:flex}
 
 <div id="touch" hidden>
   <div id="joyZone"><div id="joyBase"><div id="joyKnob"></div></div></div>
-  <button class="tb" data-a="atk" style="right:16px;bottom:16px;width:78px;height:78px;font-size:30px">斬</button>
-  <button class="tb" data-a="tal" style="right:140px;bottom:28px;width:54px;height:54px">符<i class="cd"></i></button>
-  <button class="tb" data-a="spin" style="right:125px;bottom:84px;width:54px;height:54px">旋<i class="cd"></i></button>
-  <button class="tb" data-a="bolt" style="right:84px;bottom:125px;width:54px;height:54px">雷<i class="cd"></i></button>
-  <button class="tb" data-a="judg" style="right:28px;bottom:140px;width:54px;height:54px">天<i class="cd"></i></button>
-  <button class="tb" data-a="roll" style="right:210px;bottom:18px;width:52px;height:52px">轉<i class="cd"></i></button>
-  <button class="tb" data-a="flask" style="right:24px;bottom:210px;width:48px;height:48px">藥<i class="cd"></i><span class="c" id="flaskC">3</span></button>
+  <button class="tb" data-a="atk" style="right:16px;bottom:16px;width:78px;height:78px;font-size:22px">베기</button>
+  <button class="tb" data-a="tal" style="right:140px;bottom:28px;width:54px;height:54px">부적<i class="cd"></i></button>
+  <button class="tb" data-a="spin" style="right:125px;bottom:84px;width:54px;height:54px">회전<i class="cd"></i></button>
+  <button class="tb" data-a="bolt" style="right:84px;bottom:125px;width:54px;height:54px">번개<i class="cd"></i></button>
+  <button class="tb" data-a="judg" style="right:28px;bottom:140px;width:54px;height:54px">천벌<i class="cd"></i></button>
+  <button class="tb" data-a="roll" style="right:210px;bottom:18px;width:52px;height:52px"><span style="font-size:14px">구르기</span><i class="cd"></i></button>
+  <button class="tb" data-a="flask" style="right:24px;bottom:210px;width:48px;height:48px">약<i class="cd"></i><span class="c" id="flaskC">3</span></button>
 </div>
 
 <script>
@@ -344,11 +344,11 @@ document.querySelectorAll('.tb').forEach(b=>{
 
 /* ================= 데이터 ================= */
 const ACTS=[
-  {mark:'壹',name:'제1막 · 굶주린 들',sub:'광주목 들녘 · 경술년(1670) 늦여름',pool:['agwi','agwi','agwi','yeokgwi','dokkaebi'],quota:35,boss:'agwiwang',
+  {mark:'1막',name:'제1막 · 굶주린 들',sub:'광주목 들녘 · 경술년(1670) 늦여름',pool:['agwi','agwi','agwi','yeokgwi','dokkaebi'],quota:35,boss:'agwiwang',
     ground:['#1e1c17','#2b271d','#3c3c38'],dark:'rgba(5,6,12,0.8)',weather:'hail',hpM:1,dmM:1,xpM:1,foe:'아귀'},
-  {mark:'貳',name:'제2막 · 동활인서의 밤',sub:'한양 동소문 밖 · 신해년(1671) 봄',pool:['agwi','yeokgwi','yeokgwi','mudang','cheonyeo','agwi'],quota:45,boss:'mama',
+  {mark:'2막',name:'제2막 · 동활인서의 밤',sub:'한양 동소문 밖 · 신해년(1671) 봄',pool:['agwi','yeokgwi','yeokgwi','mudang','cheonyeo','agwi'],quota:45,boss:'mama',
     ground:['#191816','#24211b','#2e2a24'],dark:'rgba(3,4,10,0.85)',weather:'rain',hpM:2.7,dmM:1.8,xpM:2.2,foe:'역귀'},
-  {mark:'參',name:'제3막 · 목멱산 국사당',sub:'목멱산 기슭 · 신해년(1671) 여름',pool:['yeokgwi','mudang','cheonyeo','dokkaebi','agwi','cheonyeo'],quota:50,boss:'heugun',
+  {mark:'3막',name:'제3막 · 목멱산 국사당',sub:'목멱산 기슭 · 신해년(1671) 여름',pool:['yeokgwi','mudang','cheonyeo','dokkaebi','agwi','cheonyeo'],quota:50,boss:'heugun',
     ground:['#17140f','#221c13','#2c1a16'],dark:'rgba(9,2,4,0.86)',weather:'ember',hpM:5.8,dmM:2.8,xpM:4,foe:'잡귀'},
 ];
 const MON={
@@ -364,18 +364,18 @@ const BOSSES={
   heugun:{name:'요승 흑운',title:'저승문을 여는 자',hp:13000,r:30,spd:86,dmg:50,h:88,pats:['rings','thunder','cross','summon'],xp:900,sum:'cheonyeo'},
 };
 const PASSIVES=[
-  {id:'hp',h:'骨',name:'무쇠 근골',desc:'최대 체력 +25'},
-  {id:'dmg',h:'刃',name:'날선 칼끝',desc:'모든 피해 +12%'},
-  {id:'as',h:'疾',name:'질풍',desc:'공격·시전 속도 +10%'},
-  {id:'crit',h:'鷹',name:'매의 눈',desc:'치명타 확률 +5%'},
-  {id:'leech',h:'血',name:'피의 맹세',desc:'준 피해의 2%만큼 체력을 되찾는다'},
-  {id:'mp',h:'氣',name:'단전 호흡',desc:'최대 기력 +20, 기력 재생 +1.5/초'},
-  {id:'skill',h:'符',name:'부적술',desc:'부적·회오리·뇌전·천벌 피해 +18%'},
-  {id:'ms',h:'風',name:'경공',desc:'이동 속도 +7%'},
-  {id:'armor',h:'甲',name:'철갑',desc:'방어도 +12'},
-  {id:'multi',h:'散',name:'흩날리는 부적',desc:'부적을 두 장 더 던진다',max:2},
-  {id:'storm',h:'雷',name:'연쇄 뇌전',desc:'뇌전부 범위 +25%, 가까운 적에게 낙뢰 한 번 더',max:3},
-  {id:'flask',h:'藥',name:'약방 비기',desc:'청심환 최대 개수 +1, 회복량 +15%',max:3},
+  {id:'hp',h:'근골',name:'무쇠 근골',desc:'최대 체력 +25'},
+  {id:'dmg',h:'칼끝',name:'날선 칼끝',desc:'모든 피해 +12%'},
+  {id:'as',h:'질풍',name:'질풍',desc:'공격·시전 속도 +10%'},
+  {id:'crit',h:'매눈',name:'매의 눈',desc:'치명타 확률 +5%'},
+  {id:'leech',h:'흡혈',name:'피의 맹세',desc:'준 피해의 2%만큼 체력을 되찾는다'},
+  {id:'mp',h:'호흡',name:'단전 호흡',desc:'최대 기력 +20, 기력 재생 +1.5/초'},
+  {id:'skill',h:'부적',name:'부적술',desc:'부적·회오리·뇌전·천벌 피해 +18%'},
+  {id:'ms',h:'경공',name:'경공',desc:'이동 속도 +7%'},
+  {id:'armor',h:'철갑',name:'철갑',desc:'방어도 +12'},
+  {id:'multi',h:'산개',name:'흩날리는 부적',desc:'부적을 두 장 더 던진다',max:2},
+  {id:'storm',h:'연쇄',name:'연쇄 뇌전',desc:'뇌전부 범위 +25%, 가까운 적에게 낙뢰 한 번 더',max:3},
+  {id:'flask',h:'약방',name:'약방 비기',desc:'청심환 최대 개수 +1, 회복량 +15%',max:3},
 ];
 const MODS={
   flat:{t:'물리 피해 +{v}',r:[2,5],sc:2},dmgPct:{t:'피해 +{v}%',r:[6,14],sc:1.35},as:{t:'공격 속도 +{v}%',r:[4,9],sc:1.15},
@@ -385,23 +385,23 @@ const MODS={
 };
 const PREFIX={flat:'날카로운',dmgPct:'사나운',as:'재빠른',crit:'매서운',maxHp:'튼튼한',maxMp:'맑은',armor:'단단한',leech:'피 굶주린',ms:'날랜',skill:'신묘한',mpReg:'고요한'};
 const BASES={weapon:['환도','월도','협도','쌍수도','철편'],armor:['철릭','두정갑','전복','도포','엄심갑'],amulet:['노리개','염주','호패','향낭'],ring:['가락지','은가락지','옥가락지','쌍가락지']};
-const SLOTNAME={weapon:'무기',armor:'갑옷',amulet:'장신구',ring:'가락지'},SLOTG={weapon:'刀',armor:'甲',amulet:'飾',ring:'環'};
+const SLOTNAME={weapon:'무기',armor:'갑옷',amulet:'장신구',ring:'가락지'},SLOTG={weapon:'무기',armor:'갑옷',amulet:'장신구',ring:'가락지'};
 const IMPL={weapon:'flat',armor:'armor',amulet:'maxMp',ring:'crit'};
 const RNA=['서리','핏빛','달그림자','망자','검은비','주린','귀곡','잿빛','무덤','이승','칠흑','곡성'],RNB=['울음','맹세','송곳','비명','허기','눈물','이빨','손톱','그림자','숨결','원한','넋'];
 const UNIQUES=[
-  {slot:'weapon',name:'사인검',base:'四寅劍',mods:[['flat',[7,11]],['dmgPct',[28,38]],['crit',[6,9]],['leech',[1.5,2.5]]],lore:'범의 해, 범의 달, 범의 날, 범의 시에 벼려 요사한 것을 벤다는 칼. 칼날에 스물여덟 별자리가 새겨져 있다.'},
-  {slot:'armor',name:'두석린갑',base:'豆錫鱗甲',mods:[['armor',[14,22]],['maxHp',[35,55]],['ms',[4,6]]],lore:'놋쇠 비늘을 엮은 장수의 갑옷. 역귀의 손톱이 미끄러진다.'},
-  {slot:'amulet',name:'범 발톱 노리개',base:'虎爪',mods:[['crit',[7,10]],['leech',[2,3]],['maxHp',[20,30]]],lore:'범의 발톱을 은에 물린 노리개. 아이 목에 걸어 잡귀를 쫓았다.'},
-  {slot:'ring',name:'짝 잃은 쌍가락지',base:'雙指環',mods:[['skill',[25,35]],['mpReg',[3,5]],['maxMp',[25,35]]],lore:'혼례 때 받은 쌍가락지의 한 짝. 돌아오지 않는 이를 기다린 마음이 식지 않았다.'},
+  {slot:'weapon',name:'사인검',base:'범의 기운을 담은 칼',mods:[['flat',[7,11]],['dmgPct',[28,38]],['crit',[6,9]],['leech',[1.5,2.5]]],lore:'범의 해, 범의 달, 범의 날, 범의 시에 벼려 요사한 것을 벤다는 칼. 칼날에 스물여덟 별자리가 새겨져 있다.'},
+  {slot:'armor',name:'두석린갑',base:'놋쇠 비늘 갑옷',mods:[['armor',[14,22]],['maxHp',[35,55]],['ms',[4,6]]],lore:'놋쇠 비늘을 엮은 장수의 갑옷. 역귀의 손톱이 미끄러진다.'},
+  {slot:'amulet',name:'범 발톱 노리개',base:'범 발톱',mods:[['crit',[7,10]],['leech',[2,3]],['maxHp',[20,30]]],lore:'범의 발톱을 은에 물린 노리개. 아이 목에 걸어 잡귀를 쫓았다.'},
+  {slot:'ring',name:'짝 잃은 쌍가락지',base:'쌍가락지 한 짝',mods:[['skill',[25,35]],['mpReg',[3,5]],['maxMp',[25,35]]],lore:'혼례 때 받은 쌍가락지의 한 짝. 돌아오지 않는 이를 기다린 마음이 식지 않았다.'},
 ];
 
 /* ================= 이야기 ================= */
 const STORY={
   prologue:[
-    {mark:'序',title:'경신년의 두 해',sub:'현종 11년 · 1670',body:[
+    {mark:'서장',title:'경신년의 두 해',sub:'현종 11년 · 1670',body:[
       '여름인데 서리가 내렸다. 우박이 보리를 짓이겼고, 가뭄 뒤에는 큰물이, 큰물 뒤에는 메뚜기 떼가 왔다.',
       '이듬해 신해년에는 역병이 돌았다. 밭을 갈 소마저 우역으로 쓰러졌다. 조정은 진휼청을 열어 죽을 쑤었으나, 굶어 죽고 병들어 죽은 백성이 수십만이라 했다. 훗날 사람들은 경술년과 신해년을 합쳐 이 재앙을 <em>경신대기근</em>이라 불렀다.']},
-    {mark:'密',title:'실록에 없는 밤',sub:'임금의 밀지',body:[
+    {mark:'밀지',title:'실록에 없는 밤',sub:'임금의 밀지',body:[
       '실록에 적히지 않은 일도 있었다. 묻히지 못한 주검이 밤마다 일어나 걸었다. 배는 북처럼 부풀고 목은 바늘처럼 가는 것들. 사람들은 그것을 <em>아귀</em>라 불렀다.',
       '당신은 금군 별장 서진. 품에는 임금의 밀지가 있다. <span class="speaker">「역귀의 뿌리를 찾아 베어라. 이 일은 사관도 모르게 하라.」</span> 허리에는 낡은 환도를, 소매에는 도성 무녀가 써 준 부적 한 묶음을 챙겼다.']},
   ],
@@ -412,9 +412,9 @@ const STORY={
   ],
   bossSpawn:['땅 밑에서 곳간 문이 열리는 소리가 난다. 아귀왕이 깨어났다.','붉은 가마가 지나간다. 손님이 오셨다.','국사당의 종이 저절로 울린다. 흑운이 기다린다.'],
   outro:[
-    {mark:'壹',title:'검은 부적',body:['아귀왕이 무너지자 그 배에서 젖은 부적 한 장이 흘러나왔다. 누군가 주검의 입에 부적을 먹여 일으킨 것이다.','부적 귀퉁이에 먹으로 쓴 세 글자가 번져 있다. <em>東活人</em>. 동활인서.']},
-    {mark:'貳',title:'손님이 남긴 이름',body:['손님이 흩어지며 한 사람의 이름을 속삭였다. <span class="speaker">「흑운.」</span>','국사당에서 나라의 제를 거들던 중이었다. 기근에 제자들을 모두 잃고 산으로 사라졌다고 했다. 목멱산으로 가야 한다.']},
-    {mark:'終',title:'첫 비',body:[
+    {mark:'1막',title:'검은 부적',body:['아귀왕이 무너지자 그 배에서 젖은 부적 한 장이 흘러나왔다. 누군가 주검의 입에 부적을 먹여 일으킨 것이다.','부적 귀퉁이에 먹으로 쓴 세 글자가 번져 있다. <em>동활인</em>. 동활인서.']},
+    {mark:'2막',title:'손님이 남긴 이름',body:['손님이 흩어지며 한 사람의 이름을 속삭였다. <span class="speaker">「흑운.」</span>','국사당에서 나라의 제를 거들던 중이었다. 기근에 제자들을 모두 잃고 산으로 사라졌다고 했다. 목멱산으로 가야 한다.']},
+    {mark:'끝',title:'첫 비',body:[
       '<span class="speaker">「너도 보았을 것이다. 죽 한 그릇이 몇 사람을 살렸느냐.」</span> 흑운은 그 말을 끝으로 재가 되었다. 저승문이 닫히고, 목멱산 위로 첫 빗줄기가 떨어졌다.',
       '신해년 가을, 마침내 벼가 여물었다. 실록은 그해의 죽음을 숫자로만 남겼다. 그 숫자 속 이름 하나하나를 기억하는 이는 없다. 당신만이 그 밤들을 기억한다.',
       '올해 한가위에는 모두 넉넉히 드시기를.']},
@@ -1060,12 +1060,12 @@ function drawHUD(){
   // 경험치
   const xpf=P.xp/need(P.level);
   if(!tm){
-    const sz=48,gap=6,slots=[['좌','斬',P.atkCd/P.atkMax,0],['우','符',P.talCd>0?1:0,6],['Q','旋',P.cds.q/3,14],['E','雷',P.cds.e/5,22],['R','天',P.cds.r/16,45],['␣','轉',P.rollCd/.85,0],['F','藥',0,0]];
+    const sz=48,gap=6,slots=[['좌','베기',P.atkCd/P.atkMax,0],['우','부적',P.talCd>0?1:0,6],['Q','회전',P.cds.q/3,14],['E','번개',P.cds.e/5,22],['R','천벌',P.cds.r/16,45],['␣','구르기',P.rollCd/.85,0],['F','약',0,0]];
     const tw=slots.length*sz+(slots.length-1)*gap,bx=W/2-tw/2,by=H-24-sz;
     ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(bx-8,by-20,tw+16,sz+30);
     ctx.fillStyle='#2a2418';ctx.fillRect(bx,by-12,tw,5);ctx.fillStyle='#c6a052';ctx.fillRect(bx,by-12,tw*xpf,5);
     slots.forEach((s,i)=>{const x=bx+i*(sz+gap);ctx.fillStyle='#15120e';ctx.fillRect(x,by,sz,sz);ctx.strokeStyle='#5c4c2c';ctx.lineWidth=1;ctx.strokeRect(x+.5,by+.5,sz-1,sz-1);
-      const off=(s[3]&&P.mp<s[3])||(i===6&&P.flask<1);ctx.font="26px 'Song Myung',serif";ctx.textAlign='center';ctx.fillStyle=off?'#5b544a':'#dccfb2';ctx.fillText(s[1],x+sz/2,by+sz/2+9);
+      const off=(s[3]&&P.mp<s[3])||(i===6&&P.flask<1);ctx.font=`${[0,24,17,13][s[1].length]}px 'Song Myung',serif`;ctx.textAlign='center';ctx.fillStyle=off?'#5b544a':'#dccfb2';ctx.fillText(s[1],x+sz/2,by+sz/2+7);
       if(s[2]>0){ctx.fillStyle='rgba(0,0,0,.62)';ctx.fillRect(x,by+sz*(1-s[2]),sz,sz*s[2])}
       ctx.font="700 10px 'Gowun Batang',serif";ctx.textAlign='left';ctx.fillStyle='#c6a052';ctx.fillText(s[0],x+3,by+11);
       if(i===6){ctx.textAlign='right';ctx.fillStyle='#dccfb2';ctx.fillText(P.flask+'/'+P.flaskMax,x+sz-3,by+sz-4)}});
@@ -1168,7 +1168,7 @@ function cellHTML(it,attr,isSel,label){if(!it)return`<button class="cell empty" 
 function itemHTML(it){return`<div class="it-name r${it.rarity}t">${it.name}</div><div class="it-base">${SLOTNAME[it.slot]} · ${it.base}${it.rarity===3?' · 고유':it.rarity===2?' · 희귀':it.rarity===1?' · 마법':''}</div>
   <ul>${it.mods.map(m=>`<li>${fmtMod(m)}</li>`).join('')}</ul>${it.lore?`<p class="lore">${it.lore}</p>`:''}`}
 function renderInv(){
-  $('#equip').innerHTML=['weapon','armor','amulet','ring'].map(s=>cellHTML(P.equip[s],`data-eq="${s}"`,sel&&sel.eq===s,{g:SLOTG[s],n:SLOTNAME[s]})).join('');
+  $('#equip').innerHTML=['weapon','armor','amulet','ring'].map(s=>cellHTML(P.equip[s],`data-eq="${s}"`,sel&&sel.eq===s,{g:'',n:SLOTNAME[s]})).join('');
   let bag='';for(let i=0;i<20;i++)bag+=cellHTML(P.bag[i],`data-bag="${i}"`,sel&&sel.bag===i,{g:'',n:''});$('#bag').innerHTML=bag;$('#bagCount').textContent=`${P.bag.length} / 20`;
   const d=$('#detail');
   if(!sel){d.innerHTML='<p style="margin:0;color:var(--hanji-dim)">물건을 누르면 자세히 볼 수 있다. 가방의 물건은 장착하거나 버릴 수 있다.</p>'}
