@@ -61,15 +61,16 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ochre);outline-
 .slot .ct{position:absolute;top:2px;right:4px;font-size:10px;font-variant-numeric:tabular-nums}
 .slot .cd{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);height:0}
 .slot.lock{opacity:.4}
+.slot.on{border-color:var(--ochre);box-shadow:inset 0 0 0 2px rgba(216,162,76,.55)}
 .slot.nomp .ic{color:#6f8fc0}
 /* touch pad */
-#tpad{right:0;bottom:0;width:270px;height:260px;z-index:3;pointer-events:none}
+#tpad{right:0;bottom:0;width:270px;height:250px;z-index:3;pointer-events:none}
 #tpad .slot{position:absolute;pointer-events:auto;border-radius:50%;width:56px;height:56px;touch-action:none}
 #tpad .slot .nm{bottom:7px}
 #tAtk{width:84px!important;height:84px!important;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(26px + env(safe-area-inset-bottom,0px));background:radial-gradient(circle at 40% 35%,#c5573f,#7e2616)!important;border-color:#e0876b!important}
 #tAtk .ic{font-size:22px}
 .act{background:radial-gradient(circle at 40% 35%,#4d6b5c,#223a30)!important;border-color:#7fb49c!important}
-#tInt{position:fixed;right:calc(120px + env(safe-area-inset-right,0px));bottom:calc(236px + env(safe-area-inset-bottom,0px));z-index:3;padding:10px 16px;border-radius:999px;background:var(--jade);border:1px solid #9fd8c2;font-weight:700;color:#0f1f19}
+#tInt{position:fixed;right:calc(120px + env(safe-area-inset-right,0px));bottom:calc(252px + env(safe-area-inset-bottom,0px));z-index:3;padding:10px 16px;border-radius:999px;background:var(--jade);border:1px solid #9fd8c2;font-weight:700;color:#0f1f19}
 #joy{position:fixed;width:120px;height:120px;border-radius:50%;border:2px solid rgba(242,231,205,.3);background:rgba(0,0,0,.18);z-index:3;pointer-events:none;transform:translate(-50%,-50%)}
 #joy i{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px;border-radius:50%;background:rgba(242,231,205,.35)}
 /* dialogs & panels */
@@ -170,6 +171,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ochre);outline-
   <div class="mh"><h3 id="shopT">상점</h3><button class="btn" data-close type="button">닫기</button></div>
   <div class="mb" id="shopBody"></div>
 </div>
+<div id="travel" class="ui win modal" hidden>
+  <div class="mh"><h3>지도 · 이동 부적</h3><button class="btn" data-close type="button">닫기</button></div>
+  <div class="mb" id="travelBody"></div>
+</div>
 <div id="death" class="ui win modal" hidden>
   <div class="mh"><h3>쓰러졌습니다</h3></div>
   <div class="mb"><p style="margin:0;line-height:1.7">정신을 잃은 당신을 누군가 국내성으로 옮겨 주었습니다. 경험치와 돈을 조금 잃었습니다.</p>
@@ -190,7 +195,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--ochre);outline-
       <div class="nm-in"><input id="nameIn" maxlength="8" placeholder="이름" value="해모수" aria-label="캐릭터 이름"><button class="btn main" id="bStart" type="button">새로 시작</button></div>
     </div>
     <div class="row" id="contRow" style="display:flex;gap:8px" hidden><button class="btn main" id="bCont" type="button" style="flex:1">이어하기</button></div>
-    <div class="keys" id="keysHelp">이동 WASD·방향키 또는 땅 클릭 · 몬스터 클릭 = 공격 · 스페이스 가까운 적 공격 · 1~4 기술 · Q 약초 · E 영약 · R 귀환 부적 · F 대화 · I 가방 · 휠 확대</div>
+    <div class="keys" id="keysHelp">이동 WASD·방향키 또는 땅 클릭 · 몬스터 클릭 = 공격 · 스페이스 가까운 적 공격 · 1~4 기술 · Q 약초 · E 영약 · R 귀환 부적 · T 말 타기 · M 지도(이동 부적) · F 대화 · I 가방 · 휠 확대</div>
   </div>
 </div>
 
@@ -204,7 +209,7 @@ const rnd=(a,b)=>a+Math.random()*(b-a),ri=(a,b)=>Math.floor(rnd(a,b+1)),clamp=(v
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const dist=(ax,az,bx,bz)=>Math.hypot(ax-bx,az-bz);
 let seed=1;const srand=s=>{seed=s>>>0||1};const sr=()=>{seed^=seed<<13;seed>>>=0;seed^=seed>>>17;seed^=seed<<5;seed>>>=0;return seed/4294967296};const srr=(a,b)=>a+sr()*(b-a);
-if(TOUCH)$('bInv').textContent='가방';if(TOUCH)$('keysHelp').textContent='왼쪽 화면을 끌어 이동 · 몬스터를 누르면 공격 · 오른쪽 버튼으로 공격·기술·물약 · 가까이 가면 대화 버튼이 떠요';
+if(TOUCH)$('bInv').textContent='가방';if(TOUCH)$('keysHelp').textContent='왼쪽 화면을 끌어 이동 · 몬스터를 누르면 공격 · 오른쪽 버튼으로 공격·기술·물약 · 가까이 가면 대화 버튼이 떠요 · 말 버튼으로 말을 타고, 이 버튼으로 지도를 열어 순간이동해요';
 
 /* ================= THREE ================= */
 const canvas=$('gl');
@@ -385,7 +390,7 @@ const QUESTS=[
 let P=null,T=0,zone=null,zoneId=0,started=false,paused=false;
 let mobs=[],npcs=[],portals=[],cols=[],projs=[],tels=[],fxs=[],fts=[],lootFx=[];
 const keys={};
-function newPlayer(name,cls){return{name,cls,lv:1,exp:0,gold:40,hp:1,mp:1,x:0,z:10,ang:Math.PI,pots:{hp:5,mp:3,ret:2},inv:[],eq:{},q:0,qs:'none',qc:0,
+function newPlayer(name,cls){return{name,cls,lv:1,exp:0,gold:40,hp:1,mp:1,x:0,z:10,ang:Math.PI,pots:{hp:5,mp:3,ret:2,tp:5},mount:false,inv:[],eq:{},q:0,qs:'none',qc:0,
   kills:{},kc:0,time:0,visited:[0],ended:false,buffs:[],cds:[0,0,0,0],atkCd:0,potCd:0,target:null,chase:false,moveT:null,talkTo:null,pending:null,combatT:0,dead:false,dash:null,cast:null,inv0:0,st:null}}
 function mkItem(cls,slot,tier,rar){tier=clamp(tier,1,5);const t=tier-1,f=[1,1.25,1.55][rar||0];const it={slot,tier,rar:rar||0};
   if(slot==='weapon'){it.name=WN[cls][t];it.atk=Math.round([4,10,18,28,42][t]*f)}
@@ -568,7 +573,15 @@ function loadZone(id,x,z,silent){const Z=ZONES[id];zone=Z;zoneId=id;clearZone();
   addPlayerModel();$('zname').textContent=Z.name;
   if(!silent)showBanner(Z.name,Z.sub);saveGame(true)}
 let pModel=null;
-function addPlayerModel(){if(pModel)scene.remove(pModel.g);const c=CLS[P.cls];pModel=mkHuman(c.look);scene.add(pModel.g);pModel.g.position.set(P.x,0,P.z)}
+function addPlayerModel(){if(pModel)scene.remove(pModel.g);const c=CLS[P.cls];pModel=mkHuman(c.look);scene.add(pModel.g);pModel.g.position.set(P.x,0,P.z);horse=null;applyMount()}
+let horse=null;
+function applyMount(){if(horse){pModel.g.remove(horse.g);horse=null}if(!pModel)return;const on=!!P.mount;pModel.legs.forEach(l=>l.visible=!on);
+  if(on){horse=quad({col:0x7a5434,col2:0x3a2a1a,leg:1.0,w:.8,len:1.6,ears:1,snout:1,tail:1,tailL:.6,tailW:.14,tailCol:0x2a1a10,eye:0x1a1410});
+    mesh(horse.b,'box',M(0xb9442f),0,1.62,-.05,.9,.14,.9);mesh(horse.b,'box',M(0xd8a24c),0,1.56,-.05,.95,.05,.95);pModel.g.add(horse.g)}}
+function toggleMount(){if(!P||P.dead)return;if(P.mount){dismount();msg('말에서 내렸습니다.');return}
+  if(P.combatT>2.5){msg('싸우는 중에는 말에 오를 수 없습니다.','warn');return}if(P.cast)return;
+  P.mount=true;applyMount();tone(392,.12,'triangle',.06);tone(523,.18,'triangle',.06,.1);burst(P.x,.3,P.z,16,0xd8b88a,3,.5,-4,.6);msg('말에 올랐습니다. 공격하면 자동으로 내려요.')}
+function dismount(){if(P&&P.mount){P.mount=false;applyMount()}}
 
 /* ================= MOBS ================= */
 function spawnMob(type,x,z,home,temp){const d=MOBS[type];const m={kind:'mob',type,d,x,z,hx:home.x,hz:home.z,hr:home.r,hp:d.hp,mhp:d.hp,dead:false,deadT:0,aggro:false,ret:false,cd:rnd(.5,1.5),wt:rnd(1,4),
@@ -597,7 +610,7 @@ function killMob(m){m.dead=true;m.deadT=0;m.hp=0;const d=m.d;P.kills[m.type]=(P.
   if(P.target===m){P.target=null;P.chase=false;const nx=mobs.find(o=>!o.dead&&o.aggro&&dist(o.x,o.z,P.x,P.z)<8);if(nx){P.target=nx;P.chase=true}}
   if(!m.temp)m.respawn=d.rsp||rnd(10,16)}
 function hurtP(atk,mult=1,src){if(P.dead||P.inv0>0)return;const dmg=Math.max(1,Math.round(atk*mult*rnd(.85,1.15)-P.st.def*.6));P.hp-=dmg;P.combatT=5;
-  ftext(P.x,2.3,P.z,dmg,'#ff6b5a');burst(P.x,1.2,P.z,5,0xff5a4a,2.5,.35);SND.hurt();hurtFlash=.35;if(P.cast){P.cast=null;$('cast').hidden=true;msg('귀환이 끊겼습니다.','warn')}
+  ftext(P.x,2.3,P.z,dmg,'#ff6b5a');burst(P.x,1.2,P.z,5,0xff5a4a,2.5,.35);SND.hurt();hurtFlash=.35;if(P.cast){P.cast=null;$('cast').hidden=true;msg('주문이 끊겼습니다.','warn')}
   if(P.hp<=0)die()}
 let hurtFlash=0;
 function mobAttack(m){const d=m.d;m.atk=.35;if(d.ranged){fireProj({x:m.x,y:1.4,z:m.z,tx:P.x,tz:P.z,spd:14,dmg:d.atk,owner:'m',col:0xe8d8a0,size:.18,life:1.6});return}
@@ -689,14 +702,25 @@ function usePot(k){if(P.dead||P.potCd>0)return;if(P.pots[k]<=0){msg(k==='hp'?'�
   P.pots[k]--;P.potCd=.8;SND.potion();if(k==='hp'){const v=Math.round(P.st.mhp*.45);P.hp=Math.min(P.st.mhp,P.hp+v);ftext(P.x,2.4,P.z,'+'+v,'#8ff08a');burst(P.x,1,P.z,14,0x8ff08a,2,.7,1)}
   else{const v=Math.round(P.st.mmp*.5);P.mp=Math.min(P.st.mmp,P.mp+v);ftext(P.x,2.4,P.z,'+'+v,'#8fc0ff');burst(P.x,1,P.z,14,0x8fc0ff,2,.7,1)}}
 function useReturn(){if(P.dead||P.cast)return;if(zoneId===0){msg('이미 국내성에 있습니다.');return}if(P.pots.ret<=0){msg('귀환 부적이 없습니다. 주막에서 사세요.','warn');return}
-  P.cast={t:0,dur:1.6};$('cast').hidden=false;P.moveT=null;P.chase=false}
+  startCast('귀환 중…',1.6,()=>{P.pots.ret--;fadeTo(()=>loadZone(0,0,8))})}
+function startCast(label,dur,done){dismount();P.cast={t:0,dur,done};$('cast').lastElementChild.textContent=label;$('cast').hidden=false;P.moveT=null;P.chase=false;P.talkTo=null}
+const WAY=[[['국내성 광장',0,8]],[['들판 입구',-39,0],['들판 한가운데',10,4]],[['여우골 입구',0,40],['구미호 굴 앞',0,-20]],[['흉가 마을 입구',-40,0],['폐사당 앞',14,-24]],[['산성 입구',0,40],['산성 안뜰 (위험)',0,-8]]];
+function openTravel(){if(!P||P.dead)return;$('travel').hidden=false;renderTravel()}
+function renderTravel(){const b=$('travelBody');b.innerHTML=`<p style="margin:0;color:var(--muted);font-size:13px;line-height:1.6">이동 부적 1장으로 가 본 곳 어디든 곧장 갑니다. 남은 부적 <b style="color:var(--r2)">${P.pots.tp}장</b> · 주막에서 15전</p>`;
+  ZONES.forEach((Z,id)=>{const ok=P.visited.includes(id);const r=document.createElement('div');r.className='shoprow';
+    r.innerHTML=`<div><div>${Z.name}${id===zoneId?' <small style="color:var(--ochre)">(지금 여기)</small>':''}</div><small style="color:var(--muted)">${ok?Z.sub:'아직 가 보지 않은 곳'}</small></div>`;
+    const right=document.createElement('div');right.style.cssText='display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end';
+    for(const[w,x,z]of WAY[id]){const bt=document.createElement('button');bt.type='button';bt.className='btn'+(ok?' main':'');bt.textContent=w;bt.disabled=!ok;bt.onclick=()=>travelTo(id,x,z);right.append(bt)}
+    r.append(right);b.append(r)})}
+function travelTo(id,x,z){if(P.cast||P.dead)return;if(P.pots.tp<=0){msg('이동 부적이 없습니다. 주막에서 사세요.','warn');return}$('travel').hidden=true;
+  startCast('이동 중…',1.1,()=>{P.pots.tp--;fadeTo(()=>loadZone(id,x,z))})}
 function castSkill(i){if(P.dead)return;const c=CLS[P.cls],sk=c.sk[i];if(!sk)return;if(P.lv<sk.lv){msg(`「${sk.n}」은(는) 레벨 ${sk.lv}에 배웁니다.`);return}
   if(P.cds[i]>0)return;if(P.mp<sk.mp){msg('마력이 부족합니다.','warn');return}
   const needT=['strike','proj','chain','dash','dot','fan'].includes(sk.t)||(sk.t==='nova'&&!sk.self);
   if(needT){let tg=validTarget(P.target)?P.target:nearestMob(14);if(!tg){msg('주변에 대상이 없습니다.');return}P.target=tg;
     const rg=sk.range||c.range;if(dist(P.x,P.z,tg.x,tg.z)>rg+tg.rad){P.pending=i;P.chase=true;return}
     doSkill(i,sk,tg)}else doSkill(i,sk,null)}
-function doSkill(i,sk,tg){const st=P.st;P.mp-=sk.mp;P.cds[i]=sk.cd;P.pending=null;SND.cast();if(tg)P.ang=Math.atan2(tg.x-P.x,tg.z-P.z);P.atkAnim=.35;
+function doSkill(i,sk,tg){dismount();const st=P.st;P.mp-=sk.mp;P.cds[i]=sk.cd;P.pending=null;SND.cast();if(tg)P.ang=Math.atan2(tg.x-P.x,tg.z-P.z);P.atkAnim=.35;
   switch(sk.t){
     case'strike':hitMob(tg,st.atk,sk.m,{crit:sk.crit,col:sk.c});burst(tg.x,1,tg.z,14,sk.c,4,.4);SND.swing();break;
     case'whirl':ringFx(P.x,P.z,sk.r,sk.c,.4);burst(P.x,1,P.z,24,sk.c,6,.4,-2,.4);for(const m of mobs.slice())if(!m.dead&&dist(P.x,P.z,m.x,m.z)<sk.r+m.rad)hitMob(m,st.atk,sk.m,{col:sk.c});SND.swing();break;
@@ -712,10 +736,10 @@ function doSkill(i,sk,tg){const st=P.st;P.mp-=sk.mp;P.cds[i]=sk.cd;P.pending=nul
     case'heal':{const v=Math.round(st.mhp*sk.v);P.hp=Math.min(st.mhp,P.hp+v);ftext(P.x,2.4,P.z,'+'+v,'#8ff08a',true);colFx(P.x,P.z,sk.c,4,.7,1);burst(P.x,1,P.z,30,sk.c,2,1,1.5);break}
     case'buff':P.buffs=P.buffs.filter(b=>b.n!==sk.n);P.buffs.push({n:sk.n,b:sk.b,t:sk.dur});colFx(P.x,P.z,sk.c,4,.7,1);burst(P.x,1,P.z,30,sk.c,2.5,.8,1);msg(`「${sk.n}」 효과가 ${sk.dur}초 동안 이어집니다.`);calc();break;
     case'dot':tg.dot={dps:st.atk*sk.m,t:sk.dur,tk:1};tg.defDown=sk.dur;tg.aggro=true;burst(tg.x,tg.h,tg.z,20,sk.c,2,.8,1);ringFx(tg.x,tg.z,1.5,sk.c,.5);break}}
-function basicAttack(tg){const c=CLS[P.cls];P.atkCd=P.st.as;P.atkAnim=.35;P.ang=Math.atan2(tg.x-P.x,tg.z-P.z);
+function basicAttack(tg){dismount();const c=CLS[P.cls];P.atkCd=P.st.as;P.atkAnim=.35;P.ang=Math.atan2(tg.x-P.x,tg.z-P.z);
   if(c.ranged)fireProj({x:P.x,y:1.4,z:P.z,tx:tg.x,tz:tg.z,tg,spd:16,mult:1,owner:'p',col:c.bolt,size:.24,life:2.5});
   else{SND.swing();setTimeout(()=>{if(alive(tg))hitMob(tg,P.st.atk,1)},120)}}
-function die(){P.dead=true;P.hp=0;P.target=null;P.chase=false;P.moveT=null;SND.die();msg('쓰러졌습니다…','warn');
+function die(){dismount();P.dead=true;P.hp=0;P.target=null;P.chase=false;P.moveT=null;SND.die();msg('쓰러졌습니다…','warn');
   setTimeout(()=>{$('death').hidden=false;$('bRevive').focus()},1200)}
 function revive(){$('death').hidden=true;P.dead=false;P.exp=Math.max(0,P.exp-Math.round(need(P.lv)*.08));P.gold=Math.floor(P.gold*.9);calc();P.hp=Math.round(P.st.mhp*.6);P.mp=Math.round(P.st.mmp*.6);
   P.buffs=[];fadeTo(()=>loadZone(0,0,8))}
@@ -726,12 +750,12 @@ function updPlayer(dt){const st=P.st;P.atkCd-=dt;P.potCd-=dt;if(P.inv0>0)P.inv0-
   if(P.dash){const d=P.dash;d.t+=dt/.18;const k=Math.min(1,d.t);P.x=d.x0+(d.x1-d.x0)*k;P.z=d.z0+(d.z1-d.z0)*k;burst(P.x,1,P.z,2,0xbfe0ff,.5,.3,0);
     if(k>=1){if(alive(d.tg))hitMob(d.tg,st.atk,d.sk.m,{stun:d.sk.stun,col:d.sk.c});ringFx(P.x,P.z,1.6,0xbfe0ff,.3);P.dash=null}collide(P,.45);return}
   if(P.cast){P.cast.t+=dt;$('cast').firstElementChild.style.transform=`scaleX(${Math.min(1,P.cast.t/P.cast.dur)})`;burst(P.x,.2,P.z,2,0xd8a24c,1,.6,2);
-    if(P.cast.t>=P.cast.dur){P.cast=null;$('cast').hidden=true;P.pots.ret--;SND.portal();fadeTo(()=>loadZone(0,0,8))}}
+    if(P.cast.t>=P.cast.dur){const f=P.cast.done;P.cast=null;$('cast').hidden=true;SND.portal();f()}}
   // input
   let ix=0,iz=0;if(keys.KeyA||keys.ArrowLeft)ix--;if(keys.KeyD||keys.ArrowRight)ix++;if(keys.KeyW||keys.ArrowUp)iz--;if(keys.KeyS||keys.ArrowDown)iz++;
   if(joy.on){ix=joy.x;iz=joy.y}
-  const il=Math.hypot(ix,iz);let moving=false;const sp=6*st.spd;
-  if(il>.15){if(P.cast){P.cast=null;$('cast').hidden=true;msg('귀환이 끊겼습니다.','warn')}P.moveT=null;P.chase=false;P.talkTo=null;P.pending=null;
+  const il=Math.hypot(ix,iz);let moving=false;const sp=6*st.spd*(P.mount?1.9:1);
+  if(il>.15){if(P.cast){P.cast=null;$('cast').hidden=true;msg('주문이 끊겼습니다.','warn')}P.moveT=null;P.chase=false;P.talkTo=null;P.pending=null;
     const k=Math.min(1,il);P.x+=ix/il*sp*k*dt;P.z+=iz/il*sp*k*dt;P.ang=Math.atan2(ix,iz);moving=true}
   else if(!P.cast){
     if(P.talkTo){const n=P.talkTo;if(dist(P.x,P.z,n.x,n.z)>2.3){mv(P,n.x,n.z,sp,dt);moving=true}else{P.talkTo=null;talk(n)}}
@@ -748,7 +772,8 @@ function updPlayer(dt){const st=P.st;P.atkCd-=dt;P.potCd-=dt;if(P.inv0>0)P.inv0-
   for(const p of portals){if(dist(P.x,P.z,p.x,p.z)<1.9&&!P.cast){SND.portal();const to=p.to,sx=p.sx,sz=p.sz;P.x-=Math.sign(p.x)*3;P.z-=Math.sign(p.z)*3;fadeTo(()=>loadZone(to,sx,sz));break}}
   // anim
   const g=pModel.g;g.position.set(P.x,0,P.z);g.rotation.y=lerpAng(g.rotation.y,P.ang,Math.min(1,dt*14));
-  P.anim=(P.anim||0)+dt*(moving?11:2);const s=Math.sin(P.anim);pModel.legs.forEach((l,i)=>l.rotation.x=moving?s*(i?.55:-.55):0);pModel.b.position.y=moving?Math.abs(s)*.07:0;
+  P.anim=(P.anim||0)+dt*(moving?11:2);const s=Math.sin(P.anim);pModel.legs.forEach((l,i)=>l.rotation.x=moving?s*(i?.55:-.55):0);pModel.b.position.y=P.mount?1.02+(moving?Math.abs(Math.sin(P.anim*.8))*.12:0):moving?Math.abs(s)*.07:0;
+  if(horse){const hs=Math.sin(P.anim*.8);horse.legs.forEach((l,i)=>l.rotation.x=moving?hs*(i%2?.7:-.7)*(i<2?1:-1):0);horse.b.position.y=moving?Math.abs(hs)*.1:0;if(moving&&Math.random()<.3)burst(P.x,.1,P.z,1,0xb8a07a,1,.5,-2,.5)}
   if(P.atkAnim>0){P.atkAnim-=dt;pModel.aR.rotation.x=-1.8*Math.sin((.35-P.atkAnim)/.35*Math.PI)}else pModel.aR.rotation.x=moving?-s*.4:0;
   pModel.aL.rotation.x=moving?s*.4:0}
 
@@ -770,7 +795,7 @@ function talk(n){P.ang=Math.atan2(n.x-P.x,n.z-P.z);n.obj.rotation.y=Math.atan2(P
       showDlg('을두지',[q.done,`보상으로 ${got}을(를) 받았습니다.`].concat(nq?nq.offer:[]),nq?[{t:'맡겠습니다',main:1,f:()=>acceptQ()}]:[]);return}
     if(P.qs==='active'){showDlg('을두지',[`「${q.t}」 일은 어찌 되었나? ${q.z}에서 ${MOBS[q.k].name}을(를) ${q.n}마리 쓰러뜨려 주게. (${P.qc}/${q.n})`]);return}
     showDlg('을두지',q.offer,[{t:'맡겠습니다',main:1,f:()=>acceptQ()}]);return}
-  if(n.id==='jumo'){showDlg('주모',['어서 오시오! 약초 한 사발에 10전, 영약은 12전이오. 귀환 부적도 있다오.'],[{t:'물건 보기',main:1,f:()=>openShop('pot')}]);return}
+  if(n.id==='jumo'){showDlg('주모',['어서 오시오! 약초 한 사발에 10전, 영약은 12전이오. 귀환 부적과 이동 부적도 있다오.'],[{t:'물건 보기',main:1,f:()=>openShop('pot')}]);return}
   if(n.id==='smith'){showDlg('대장장이',['쇠 두드리는 소리 들리오? 좋은 무기와 갑옷이 있소. 쓰던 물건도 사 드리오.'],[{t:'물건 보기',main:1,f:()=>openShop('gear')}]);return}
   if(n.id==='mudang'){const b=[{t:'기력 회복 (무료)',main:1,f:()=>{P.hp=P.st.mhp;P.mp=P.st.mmp;colFx(P.x,P.z,0x9dffb0,4,.8,1);msg('신단수의 기운으로 기력을 되찾았습니다.')}}];
     for(const id of P.visited)if(id!==0){const Z=ZONES[id];b.push({t:'신령의 길: '+Z.name,f:()=>{const p=Z.portals[0];SND.portal();fadeTo(()=>loadZone(id,p.x-Math.sign(p.x)*5,p.z-Math.sign(p.z)*5))}})}
@@ -788,7 +813,7 @@ function renderShop(){const b=$('shopBody');b.innerHTML='';const tabs=document.c
     const right=document.createElement('div');right.style.cssText='display:flex;gap:8px;align-items:center';right.innerHTML=`<span class="p">${price}전</span>`;
     const bt=document.createElement('button');bt.className='btn main';bt.textContent=lbl;bt.onclick=f;right.append(bt);r.append(right);b.append(r)};
   if(shopTab==='buy'){
-    if(shopKind==='pot'){for(const[k,n,s,p]of[['hp','약초','체력 45% 회복 (Q)',10],['mp','영약','마력 50% 회복 (E)',12],['ret','귀환 부적','국내성으로 돌아가기 (R)',20]]){
+    if(shopKind==='pot'){for(const[k,n,s,p]of[['hp','약초','체력 45% 회복 (Q)',10],['mp','영약','마력 50% 회복 (E)',12],['ret','귀환 부적','국내성으로 돌아가기 (R)',20],['tp','이동 부적','가 본 곳으로 순간이동 (M)',15]]){
         row(`${n} <small style="color:var(--muted)">(${P.pots[k]}개)</small>`,s,p,'1개',()=>buy(k,p,1));row(`${n} 5개`,s,p*5,'5개',()=>buy(k,p*5,5))}}
     else{for(const slot of['weapon','armor','acc'])for(const t of[1,2,3]){const it=mkItem(P.cls,slot,t,0);row(it.name,`${SLOTN[slot]} · ${itemDesc(it)}`,it.price,'사기',()=>{if(P.gold<it.price){msg('돈이 모자랍니다.','warn');return}P.gold-=it.price;SND.coin();addItem(mkItem(P.cls,slot,t,0));renderShop()})}}}
   else{if(!P.inv.length){const e=document.createElement('p');e.style.cssText='margin:0;color:var(--muted)';e.textContent='팔 물건이 없습니다. 장착 중인 물건은 팔 수 없어요.';b.append(e)}
@@ -797,7 +822,7 @@ function buy(k,p,n){if(P.gold<p){msg('돈이 모자랍니다.','warn');return}P.
 function openInv(){$('inv').hidden=false;selInv=-1;renderInv()}
 function renderInv(){if($('inv').hidden)return;const b=$('invBody');const st=P.st;
   let h=`<div class="eqs">${['weapon','armor','acc'].map(s=>{const it=P.eq[s];return`<div class="eq"><div class="l">${SLOTN[s]}</div>${it?`<div class="r${it.rar}">${it.name}</div><small style="color:var(--muted)">${itemDesc(it)}</small>`:'<div style="color:var(--muted)">없음</div>'}</div>`}).join('')}</div>`;
-  h+=`<div class="stats"><span>공격 <b>${st.atk}</b></span><span>방어 <b>${st.def}</b></span><span>체력 <b>${st.mhp}</b></span><span>마력 <b>${st.mmp}</b></span><span>약초 <b>${P.pots.hp}</b></span><span>영약 <b>${P.pots.mp}</b></span><span>귀환 부적 <b>${P.pots.ret}</b></span><span>돈 <b>${P.gold}전</b></span></div>`;
+  h+=`<div class="stats"><span>공격 <b>${st.atk}</b></span><span>방어 <b>${st.def}</b></span><span>체력 <b>${st.mhp}</b></span><span>마력 <b>${st.mmp}</b></span><span>약초 <b>${P.pots.hp}</b></span><span>영약 <b>${P.pots.mp}</b></span><span>귀환 부적 <b>${P.pots.ret}</b></span><span>이동 부적 <b>${P.pots.tp}</b></span><span>돈 <b>${P.gold}전</b></span></div>`;
   h+=`<div class="grid">${P.inv.map((it,i)=>`<button type="button" class="it${i===selInv?' sel':''}" data-i="${i}"><span class="r${it.rar}">${it.name}</span><small>${SLOTN[it.slot]} · ${itemDesc(it)}</small></button>`).join('')||'<div style="color:var(--muted)">가방이 비었습니다.</div>'}</div>`;
   if(selInv>=0&&P.inv[selInv]){const it=P.inv[selInv],cur=P.eq[it.slot];
     h+=`<div class="detail"><div><b class="r${it.rar}">${it.name}</b> — ${itemDesc(it)}</div><div style="color:var(--muted)">지금 장착: ${cur?cur.name+' ('+itemDesc(cur)+')':'없음'}</div><div class="row"><button class="btn main" type="button" id="bEq">장착</button><button class="btn" type="button" id="bDrop">버리기</button></div></div>`}
@@ -812,7 +837,7 @@ let bannerT=0;function showBanner(a,b){$('bA').textContent=a;$('bB').textContent
 function fadeTo(f){const e=$('fade');e.style.opacity=1;paused=true;setTimeout(()=>{f();e.style.opacity=0;paused=false},360)}
 const slots=[];
 function buildBar(){const c=CLS[P.cls];const defs=c.sk.map((s,i)=>({k:String(i+1),ic:s.n[0],nm:s.n,f:()=>castSkill(i),sk:i}))
-  .concat([{k:'Q',ic:'약',nm:'약초',f:()=>usePot('hp'),pot:'hp'},{k:'E',ic:'영',nm:'영약',f:()=>usePot('mp'),pot:'mp'},{k:'R',ic:'귀',nm:'귀환',f:useReturn,pot:'ret'}]);
+  .concat([{k:'Q',ic:'약',nm:'약초',f:()=>usePot('hp'),pot:'hp'},{k:'E',ic:'영',nm:'영약',f:()=>usePot('mp'),pot:'mp'},{k:'R',ic:'귀',nm:'귀환',f:useReturn,pot:'ret'},{k:'T',ic:'말',nm:'말 타기',f:toggleMount,tog:1},{k:'M',ic:'이',nm:'이동',f:()=>{if($('travel').hidden)openTravel();else $('travel').hidden=true},pot:'tp'}]);
   slots.length=0;const bar=$('bar');bar.innerHTML='';const tp=$('tpad');tp.innerHTML='';
   const mk=(d,par,style)=>{const b=document.createElement('button');b.type='button';b.className='slot';b.innerHTML=`<span class="cd"></span><span class="ic">${d.ic}</span><span class="nm">${d.nm}</span>${TOUCH?'':`<span class="k">${d.k}</span>`}<span class="ct"></span>`;
     if(style)b.style.cssText=style;b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();ensureAudio();d.f()});par.append(b);return b};
@@ -822,7 +847,7 @@ function buildBar(){const c=CLS[P.cls];const defs=c.sk.map((s,i)=>({k:String(i+1
     atk.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();ensureAudio();attackNearest()});tp.append(atk);
     const pos=[[130,31],[117,90],[72,131],[13,139]];
     defs.slice(0,4).forEach((d,i)=>slots.push(Object.assign({el:mk(d,tp,`right:calc(${pos[i][0]}px + ${sa});bottom:calc(${pos[i][1]}px + ${sb})`)},d)));
-    const pp=[[200,24],[200,80],[200,136]];
+    const pp=[[200,24],[200,80],[200,136],[200,192],[148,192]];
     defs.slice(4).forEach((d,i)=>{const s=Object.assign({el:mk(d,tp,`right:calc(${pp[i][0]}px + ${sa});bottom:calc(${pp[i][1]}px + ${sb});width:48px;height:48px`)},d);s.el.classList.add('act');slots.push(s)})}}
 function attackNearest(){if(P.dead)return;let t=validTarget(P.target)&&dist(P.x,P.z,P.target.x,P.target.z)<16?P.target:nearestMob(16);if(!t){msg('주변에 적이 없습니다.');return}P.target=t;P.chase=true;P.moveT=null;P.talkTo=null}
 function updUI(){const st=P.st;$('hpb').firstElementChild.style.transform=`scaleX(${P.hp/st.mhp})`;$('hpt').textContent=`${Math.ceil(P.hp)} / ${st.mhp}`;
@@ -832,7 +857,7 @@ function updUI(){const st=P.st;$('hpb').firstElementChild.style.transform=`scale
   const bf=P.buffs.map(b=>`<span>${b.n} ${Math.ceil(b.t)}초</span>`).join('');if($('buffs').innerHTML!==bf)$('buffs').innerHTML=bf;
   for(const s of slots){if(s.sk!==undefined){const sk=CLS[P.cls].sk[s.sk];s.el.classList.toggle('lock',P.lv<sk.lv);s.el.classList.toggle('nomp',P.mp<sk.mp);
       s.el.querySelector('.cd').style.height=(P.cds[s.sk]>0?P.cds[s.sk]/sk.cd*100:0)+'%';s.el.querySelector('.ct').textContent=P.lv<sk.lv?'Lv'+sk.lv:''}
-    else{s.el.querySelector('.ct').textContent=P.pots[s.pot];s.el.querySelector('.cd').style.height=(s.pot!=='ret'&&P.potCd>0?P.potCd/.8*100:0)+'%'}}
+    else if(s.tog)s.el.classList.toggle('on',!!P.mount);else{s.el.querySelector('.ct').textContent=P.pots[s.pot];s.el.querySelector('.cd').style.height=((s.pot==='hp'||s.pot==='mp')&&P.potCd>0?P.potCd/.8*100:0)+'%'}}
   const q=QUESTS[P.q];let qh='<div class="qh">퀘스트</div>';
   if(!q)qh+='<div>모든 임무 완료</div><div class="qd">자유롭게 사냥하세요</div>';
   else if(P.qs==='none')qh+=`<div>${q.t}</div><div class="qd">국내성의 을두지와 대화하세요</div>`;
@@ -870,11 +895,11 @@ function drawMinimap(){const w=mm.width,S=zone.S,k=w/(S*2+4);const X=x=>(x+S+2)*
   mc.save();mc.translate(X(P.x),X(P.z));mc.rotate(-P.ang+Math.PI);mc.fillStyle='#ffffff';mc.beginPath();mc.moveTo(0,-5);mc.lineTo(4,4);mc.lineTo(-4,4);mc.fill();mc.restore()}
 
 /* ================= INPUT ================= */
-const KEYMAP={Digit1:()=>castSkill(0),Digit2:()=>castSkill(1),Digit3:()=>castSkill(2),Digit4:()=>castSkill(3),KeyQ:()=>usePot('hp'),KeyE:()=>usePot('mp'),KeyR:useReturn,
+const KEYMAP={Digit1:()=>castSkill(0),Digit2:()=>castSkill(1),Digit3:()=>castSkill(2),Digit4:()=>castSkill(3),KeyQ:()=>usePot('hp'),KeyE:()=>usePot('mp'),KeyR:useReturn,KeyT:toggleMount,KeyM:()=>{if($('travel').hidden)openTravel();else $('travel').hidden=true},
   Space:attackNearest,KeyF:()=>{if(nearNpc)talk(nearNpc)},KeyI:()=>{if($('inv').hidden)openInv();else $('inv').hidden=true},
   Tab:()=>{const ms=mobs.filter(m=>!m.dead&&dist(m.x,m.z,P.x,P.z)<16).sort((a,b)=>dist(P.x,P.z,a.x,a.z)-dist(P.x,P.z,b.x,b.z));if(!ms.length)return;const i=ms.indexOf(P.target);P.target=ms[(i+1)%ms.length]}};
 addEventListener('keydown',e=>{if(!started)return;if(e.target&&e.target.tagName==='INPUT')return;
-  if(e.code==='Escape'){for(const id of['inv','shop'])$(id).hidden=true;if(dlg)closeDlg();return}
+  if(e.code==='Escape'){for(const id of['inv','shop','travel'])$(id).hidden=true;if(dlg)closeDlg();return}
   if(dlg&&(e.code==='Space'||e.code==='Enter')){e.preventDefault();const b=$('dBtns').querySelector('.main')||$('dBtns').lastElementChild;if(b)b.click();return}
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','Tab'].includes(e.code))e.preventDefault();
   keys[e.code]=true;if(e.repeat)return;ensureAudio();const f=KEYMAP[e.code];if(f&&!P.dead)f()});
@@ -930,10 +955,10 @@ const sv=loadSave();if(sv){$('contRow').hidden=false;$('bCont').textContent=`이
 function startGame(p,z,x,zz,fresh){P=p;calc();if(fresh){P.hp=P.st.mhp;P.mp=P.st.mmp}started=true;$('title').hidden=true;
   for(const id of['hud','right','expb','expt'])$(id).hidden=false;$('bar').hidden=TOUCH;$('tpad').hidden=!TOUCH;
   $('pname').textContent=P.name;$('pcls').textContent=CLS[P.cls].name;buildBar();loadZone(z,x,zz);
-  if(fresh){setTimeout(()=>{msg('국내성에 도착했습니다. 노란 ! 표시가 있는 을두지를 찾아가세요.','q');const n=npcs.find(n=>n.id==='euldu');if(n)P.talkTo=n},600)}}
+  if(fresh){setTimeout(()=>{msg('국내성에 도착했습니다. 노란 ! 표시가 있는 을두지를 찾아가세요.','q');msg(TOUCH?'말 버튼으로 말을 타면 두 배 가까이 빨라요. 이 버튼은 순간이동 지도예요.':'T키로 말을 타면 두 배 가까이 빨라요. M키는 순간이동 지도예요.');const n=npcs.find(n=>n.id==='euldu');if(n)P.talkTo=n},600)}}
 $('bStart').onclick=()=>{ensureAudio();const nm=($('nameIn').value.trim()||'해모수').slice(0,8);const p=newPlayer(nm,selCls);
   p.eq.weapon=mkItem(selCls,'weapon',1,0);p.eq.armor=mkItem(selCls,'armor',1,0);startGame(p,0,0,10,true)};
-$('bCont').onclick=()=>{ensureAudio();const s=loadSave();if(!s)return;const p=newPlayer(s.name,s.cls);Object.assign(p,{lv:s.lv,exp:s.exp,gold:s.gold,hp:s.hp,mp:s.mp,pots:s.pots,inv:s.inv||[],eq:s.eq||{},q:s.q,qs:s.qs,qc:s.qc,kills:s.kills||{},kc:s.kc||0,time:s.time||0,visited:s.visited||[0],ended:!!s.ended});
+$('bCont').onclick=()=>{ensureAudio();const s=loadSave();if(!s)return;const p=newPlayer(s.name,s.cls);if(s.pots&&s.pots.tp==null)s.pots.tp=5;Object.assign(p,{lv:s.lv,exp:s.exp,gold:s.gold,hp:s.hp,mp:s.mp,pots:s.pots,inv:s.inv||[],eq:s.eq||{},q:s.q,qs:s.qs,qc:s.qc,kills:s.kills||{},kc:s.kc||0,time:s.time||0,visited:s.visited||[0],ended:!!s.ended});
   startGame(p,s.zone||0,s.x||0,s.z||10,false);if(P.hp<=0){P.hp=P.st.mhp*.5}msg('다시 오신 것을 환영합니다.','q')};
 $('nameIn').addEventListener('keydown',e=>{if(e.key==='Enter')$('bStart').click()});
 
