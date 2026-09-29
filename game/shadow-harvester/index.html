@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>그림자 수확자 · 3D 핵앤슬래시</title>
+  <style>
+    :root{--gold:#f6c667;--ink:#101522;--panel:rgba(10,16,28,.82);--red:#ff5d6c;--cyan:#72e5ff}
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07101d;color:#fff;font-family:Inter,system-ui,-apple-system,"Noto Sans KR",sans-serif}
+    #game{position:fixed;inset:0}canvas{display:block}
+    #hud{position:fixed;inset:0;pointer-events:none;text-shadow:0 2px 4px #000}
+    .top{position:absolute;left:18px;top:16px;width:min(420px,calc(100vw - 36px))}
+    .brand{font-size:20px;font-weight:900;letter-spacing:.04em;color:var(--gold);margin-bottom:8px}
+    .bar{height:16px;border-radius:10px;background:#1b2435;border:1px solid #526078;overflow:hidden;box-shadow:0 0 18px #0008}
+    .fill{height:100%;transition:width .18s ease}.hp{background:linear-gradient(90deg,#c52d48,#ff7d6e)}.xp{background:linear-gradient(90deg,#37a9dd,#adf4ff)}
+    .stats{display:flex;justify-content:space-between;font-size:13px;margin:4px 2px 8px;color:#dce7ff}
+    #act{position:absolute;right:20px;top:18px;text-align:right}.actTitle{font-size:17px;font-weight:800;color:var(--gold)}.actSub{font-size:13px;color:#c5d3eb;margin-top:3px}
+    #wave{position:absolute;left:50%;top:17px;transform:translateX(-50%);text-align:center;font-size:14px;color:#dbe7ff}
+    #boss{position:absolute;left:50%;top:54px;transform:translateX(-50%);width:min(500px,70vw);display:none;text-align:center}
+    #boss .bar{height:12px}.bossfill{background:linear-gradient(90deg,#9b1f82,#ff6bd8)}
+    #hint{position:absolute;bottom:15px;left:18px;color:#dce7ff;font-size:13px;opacity:.9}
+    #toast{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);font-size:24px;color:var(--gold);font-weight:900;opacity:0;transition:opacity .2s;white-space:nowrap}
+    .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(2,5,13,.68);backdrop-filter:blur(5px);pointer-events:auto}
+    .card{width:min(680px,calc(100vw - 30px));background:linear-gradient(145deg,#18243a,#0d1422);border:1px solid #61718c;border-radius:18px;padding:24px;box-shadow:0 22px 80px #000b}
+    .card h1{margin:0 0 8px;color:var(--gold);font-size:27px}.card p{margin:0 0 18px;color:#c9d7ef}
+    .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.choice{border:1px solid #52617a;background:#1a2941;color:#fff;border-radius:13px;padding:17px;text-align:left;cursor:pointer;min-height:130px;transition:.15s}
+    .choice:hover{transform:translateY(-3px);border-color:var(--gold);background:#253a5d}.choice strong{display:block;color:var(--cyan);font-size:17px;margin-bottom:8px}.choice span{display:block;color:#c2cee2;font-size:13px;line-height:1.5}
+    #start{display:grid}.startLogo{font-size:42px;font-weight:1000;color:var(--gold);letter-spacing:-.05em}.startSub{font-size:18px;color:#c8d8f5;margin:8px 0 25px}.btn{border:0;border-radius:10px;padding:13px 20px;background:var(--gold);color:#111827;font-weight:900;cursor:pointer;font-size:15px}.small{font-size:12px;color:#9caecb;margin-top:15px}
+    @media(max-width:620px){.choices{grid-template-columns:1fr}.choice{min-height:auto}.card{padding:18px}.startLogo{font-size:31px}#hint{font-size:11px}.top{width:240px}}
+  </style>
+</head>
+<body>
+<div id="game"></div>
+<div id="hud">
+  <div class="top"><div class="brand">제철한상 · 그림자 수확자</div><div class="bar"><div id="hp" class="fill hp"></div></div><div class="stats"><span id="hpText"></span><span id="levelText"></span></div><div class="bar"><div id="xp" class="fill xp"></div></div><div class="stats"><span id="xpText"></span><span id="goldText"></span></div></div>
+  <div id="act"><div id="actTitle" class="actTitle"></div><div id="actSub" class="actSub"></div></div>
+  <div id="wave"></div>
+  <div id="boss"><div id="bossName"></div><div class="bar"><div id="bossFill" class="fill bossfill"></div></div></div>
+  <div id="toast"></div>
+  <div id="hint">WASD 이동 · 마우스 조준/공격 · SPACE 대시 · Q 회복 · ESC 일시정지</div>
+</div>
+<div id="start" class="modal" style="display:grid"><div class="card"><div class="startLogo">그림자 수확자</div><div class="startSub">어둠이 내려앉은 다섯 계절의 땅. 수확하고, 진화하고, 끝까지 살아남아라.</div><button id="startBtn" class="btn">모험 시작</button><div class="small">웹 브라우저에서 바로 실행되는 3D 액션 프로토타입</div></div></div>
+<div id="levelup" class="modal"><div class="card"><h1>새로운 힘이 깨어났다</h1><p>강화 하나를 선택하세요. 선택 즉시 전투가 재개됩니다.</p><div id="choices" class="choices"></div></div></div>
+<div id="gameover" class="modal"><div class="card"><h1 id="overTitle">쓰러졌다</h1><p id="overText"></p><button id="retryBtn" class="btn">다시 도전</button></div></div>
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js";
+
+const $=id=>document.getElementById(id);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x07101d); scene.fog=new THREE.Fog(0x07101d,28,78);
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,160); camera.position.set(0,18,16); camera.lookAt(0,0,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"}); renderer.setPixelRatio(Math.min(devicePixelRatio,1.7)); renderer.setSize(innerWidth,innerHeight); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; $("game").appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0x9abfff,0x172032,1.7)); const sun=new THREE.DirectionalLight(0xffe1a3,2.4); sun.position.set(-10,22,8); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024); scene.add(sun);
+
+const state={running:false,paused:false,act:1,wave:0,waves:5,score:0,gold:0,level:1,xp:0,next:70,kills:0,spawnTimer:0,spawned:0,alive:0,boss:null,shake:0};
+const keys={}; const mouse=new THREE.Vector2(); const ray=new THREE.Raycaster(); const groundPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0); const aim=new THREE.Vector3();
+const world=new THREE.Group(); scene.add(world); const actors=new THREE.Group(); scene.add(actors); const effects=new THREE.Group(); scene.add(effects);
+const colors=[0x17394a,0x3d204e,0x203d2e,0x49311b,0x261d4d]; const acts=[
+ ["I · 안개 낀 들판","흐린 수확철",0x163d4e],["II · 붉은 계곡","핏빛 협곡",0x552436],["III · 독버섯 숲","깊은 포자림",0x244a38],["IV · 잿빛 성채","무너진 왕도",0x4a342c],["V · 별 없는 제단","종말의 제단",0x29234d]
+];
+
+function mat(c,em=0){return new THREE.MeshStandardMaterial({color:c,roughness:.78,metalness:.12,emissive:em?c:0,emissiveIntensity:em?1.4:0})}
+function box(s,c,y=0){const m=new THREE.Mesh(new THREE.BoxGeometry(s,s,s),mat(c));m.position.y=y;return m}
+function makeWorld(){
+  while(world.children.length) world.remove(world.children[0]); const c=colors[state.act-1];
+  const floor=new THREE.Mesh(new THREE.CylinderGeometry(31,34,.7,64),mat(c)); floor.position.y=-.5; floor.receiveShadow=true; world.add(floor);
+  const inner=new THREE.Mesh(new THREE.CircleGeometry(28,64),new THREE.MeshStandardMaterial({color:0x0e2130,roughness:1})); inner.rotation.x=-Math.PI/2; inner.position.y=-.12; inner.receiveShadow=true; world.add(inner);
+  for(let i=0;i<34;i++){const a=i*2.399, r=25+(i%4)*1.4; const rock=new THREE.Mesh(new THREE.DodecahedronGeometry(.6+(i%3)*.3,0),mat(c));rock.position.set(Math.cos(a)*r,0,Math.sin(a)*r);rock.scale.y=.5;rock.castShadow=true;world.add(rock)}
+}
+makeWorld();
+
+const player=new THREE.Group(); player.position.set(0,0,0); actors.add(player);
+const body=new THREE.Mesh(new THREE.CapsuleGeometry(.48,.85,5,10),mat(0x57b9d8));body.position.y=.95;body.castShadow=true;player.add(body);
+const cloak=new THREE.Mesh(new THREE.ConeGeometry(.78,1.15,8),mat(0x18233c));cloak.position.y=.62;cloak.castShadow=true;player.add(cloak);
+const blade=new THREE.Mesh(new THREE.BoxGeometry(.12,.12,1.55),mat(0xe8f4ff,1));blade.position.set(.7,.9,-.35);blade.rotation.x=.2;blade.rotation.z=-.55;blade.castShadow=true;player.add(blade);
+const ring=new THREE.Mesh(new THREE.RingGeometry(.72,.82,32),new THREE.MeshBasicMaterial({color:0x67dffb,transparent:true,opacity:.35,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.02;player.add(ring);
+
+const enemies=[]; const projectiles=[]; const drops=[]; const popups=[];
+const types=[
+ {name:"망각충",color:0x7c4cc4,hp:38,spd:2.0,dmg:8,size:.62,xp:15},
+ {name:"철갑 멧돼지",color:0xb44c39,hp:90,spd:1.2,dmg:16,size:.9,xp:28},
+ {name:"서리 망령",color:0x4aa7c6,hp:60,spd:2.8,dmg:11,size:.65,xp:24},
+ {name:"수확 집행자",color:0xd4a33f,hp:150,spd:1.0,dmg:24,size:1.15,xp:50}
+];
+function enemyMesh(e){const g=new THREE.Group();const b=new THREE.Mesh(new THREE.IcosahedronGeometry(e.data.size,1),mat(e.data.color));b.position.y=e.data.size+.3;b.castShadow=true;g.add(b);const eye=new THREE.Mesh(new THREE.SphereGeometry(.12,8,8),mat(0xffd1a3,1));eye.position.set(0,e.data.size+.4,e.data.size*.7);g.add(eye);return g}
+function spawn(type=0,boss=false){
+  const a=Math.random()*Math.PI*2,r=17+Math.random()*8; const d=boss?{name:acts[state.act-1][0]+"의 지배자",color:0xcc315e,hp:1100+state.act*420,spd:.85,dmg:28+state.act*4,size:2.1,xp:500}:types[Math.min(type,types.length-1)];
+  const e={data:d,mesh:null,hp:d.hp,max:d.hp,hit:0,attack:0,boss};e.mesh=enemyMesh(e);e.mesh.position.set(Math.cos(a)*r,0,Math.sin(a)*r);actors.add(e.mesh);enemies.push(e);state.alive++; if(boss){state.boss=e;$("boss").style.display="block";$("bossName").textContent=d.name}
+}
+function removeEnemy(e){actors.remove(e.mesh); const i=enemies.indexOf(e);if(i>=0)enemies.splice(i,1);state.alive--;if(state.boss===e){state.boss=null;$("boss").style.display="none"}}
+function burst(pos,color=0xffcc66,count=10){for(let i=0;i<count;i++){const p=new THREE.Mesh(new THREE.SphereGeometry(.06,5,5),new THREE.MeshBasicMaterial({color}));p.position.copy(pos);p.userData={v:new THREE.Vector3((Math.random()-.5)*5,Math.random()*4,(Math.random()-.5)*5),life:.7};effects.add(p)}}
+function shot(){
+  if(!state.running||state.paused||player.userData.cd>0)return;player.userData.cd=.24;
+  ray.setFromCamera(mouse,camera);ray.ray.intersectPlane(groundPlane,aim); const dir=new THREE.Vector3(aim.x-player.position.x,0,aim.z-player.position.z);if(dir.lengthSq()<.01)return;dir.normalize();player.rotation.y=Math.atan2(dir.x,dir.z);
+  const p=new THREE.Mesh(new THREE.SphereGeometry(.15,8,8),new THREE.MeshBasicMaterial({color:0x9ff5ff}));p.position.copy(player.position).add(new THREE.Vector3(0,1,0));p.userData={v:dir.multiplyScalar(20),life:1.2,dmg:32+state.level*7};projectiles.push(p);effects.add(p);burst(p.position,0x72e5ff,3)
+}
+function damageEnemy(e,dmg){e.hp-=dmg;e.hit=.12;pop(e.mesh.position.clone().add(new THREE.Vector3(0,2,0)),"-"+Math.round(dmg),e.boss?0xffb3df:0xffffff);if(e.hp<=0){const pos=e.mesh.position.clone();burst(pos,e.data.color,e.boss?45:12);drop(pos,e.boss?5:Math.random()<.22?2:1);gain(e.data.xp);state.kills++;removeEnemy(e); if(e.boss) advanceAct()}}
+function drop(pos,n){for(let i=0;i<n;i++){const d=new THREE.Mesh(new THREE.OctahedronGeometry(.22,0),mat(i%2?0xf0bd4d:0x62e2ff,1));d.position.copy(pos);d.position.x+=(Math.random()-.5)*.6;d.position.z+=(Math.random()-.5)*.6;d.userData={kind:i%2?"gold":"heal",spin:Math.random()*3};drops.push(d);effects.add(d)}}
+function gain(n){state.xp+=n;while(state.xp>=state.next){state.xp-=state.next;state.level++;state.next=Math.floor(state.next*1.32);levelUp()}}
+function levelUp(){state.paused=true;const pool=[["폭풍 칼날","투사체 피해 +35%",()=>player.userData.power=(player.userData.power||1)*1.35],["검은 심장","최대 체력 +35, 즉시 회복",()=>{player.userData.max=(player.userData.max||120)+35;player.userData.hp=player.userData.max}],["망령의 발","이동 속도 +18%",()=>player.userData.speed=(player.userData.speed||6)*1.18],["연쇄 번개","공격 쿨다운 18% 감소",()=>player.userData.rate=(player.userData.rate||1)*.82],["흡혈의 씨앗","적 처치 시 체력 3 회복",()=>player.userData.life=(player.userData.life||0)+3],["거대화","공격 범위와 투사체 크기 증가",()=>player.userData.size=(player.userData.size||1)*1.25]];const chosen=[...pool].sort(()=>Math.random()-.5).slice(0,3);$("choices").innerHTML=chosen.map((x,i)=>"<button class='choice' data-i='"+i+"'><strong>"+x[0]+"</strong><span>"+x[1]+"</span></button>").join("");$("levelup").style.display="grid";document.querySelectorAll(".choice").forEach((b,i)=>b.onclick=()=>{chosen[i][2]();$("levelup").style.display="none";state.paused=false;toast("강화 획득: "+chosen[i][0])})}
+function pop(pos,text,color){const d=document.createElement("div");d.textContent=text;d.style.cssText="position:fixed;color:#"+color.toString(16).padStart(6,"0")+";font-weight:900;font-size:15px;pointer-events:none";document.body.appendChild(d);popups.push({el:d,pos,life:.7})}
+function toast(t){$("toast").textContent=t;$("toast").style.opacity=1;setTimeout(()=>{$("toast").style.opacity=0},1400)}
+function advanceAct(){if(state.act>=5){end(true);return}state.act++;state.wave=0;state.spawned=0;makeWorld();toast("막 클리어! "+acts[state.act-1][0]);for(let i=0;i<4+state.act;i++)spawn((state.act+i)%types.length)}
+function nextWave(){state.wave++;state.spawned=0; if(state.wave>state.waves){spawn(0,true);toast("막 보스 등장!");return}const count=4+state.act*2+state.wave*2;for(let i=0;i<count;i++)setTimeout(()=>{if(state.running){spawn((i+state.wave+state.act)%Math.min(3+state.act/2,types.length));state.spawned++}},i*180);toast("웨이브 "+state.wave+" 시작")}
+function start(){state.running=true;state.paused=false;state.act=1;state.wave=0;state.xp=0;state.level=1;state.next=70;state.kills=0;state.gold=0;player.userData={hp:120,max:120,speed:6,cd:0,power:1,rate:1,size:1,life:0};$("start").style.display="none";nextWave()}
+function end(win){state.running=false;$("gameover").style.display="grid";$("overTitle").textContent=win?"다섯 막을 정복했다!":"수확이 끝났다";$("overText").textContent=win?"그림자 수확자, 당신의 이름이 계절에 새겨졌습니다.":"레벨 "+state.level+" · 처치 "+state.kills+" · 골드 "+state.gold}
+$("startBtn").onclick=start;$("retryBtn").onclick=()=>{location.reload()};addEventListener("keydown",e=>{keys[e.key.toLowerCase()]=true;if(e.code==="Space")e.preventDefault();if(e.key==="Escape"&&state.running){state.paused=!state.paused;toast(state.paused?"일시정지":"전투 재개")}});addEventListener("keyup",e=>keys[e.key.toLowerCase()]=false);addEventListener("mousemove",e=>{mouse.x=e.clientX/innerWidth*2-1;mouse.y=-(e.clientY/innerHeight)*2+1});addEventListener("mousedown",e=>{if(e.button===0)shot()});addEventListener("keydown",e=>{if(e.key.toLowerCase()==="q"&&state.running&&!state.paused&&player.userData.hp<player.userData.max){player.userData.hp=Math.min(player.userData.max,player.userData.hp+55);toast("회복했다")}});addEventListener("resize",()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+
+let last=performance.now();function update(dt){
+  if(!state.running||state.paused)return;const u=player.userData;u.cd=Math.max(0,(u.cd||0)-dt);
+  const mv=new THREE.Vector3((keys.d?1:0)-(keys.a?1:0),0,(keys.s?1:0)-(keys.w?1:0));if(mv.lengthSq())mv.normalize().multiplyScalar((u.speed||6)*dt);player.position.add(mv);player.position.x=THREE.MathUtils.clamp(player.position.x,-24,24);player.position.z=THREE.MathUtils.clamp(player.position.z,-24,24);player.position.y=0;
+  if(keys[" "]&&!(u.dash||0)){u.dash=.7;const d=mv.lengthSq()?mv.clone().normalize():new THREE.Vector3(0,0,-1);player.position.add(d.multiplyScalar(3));burst(player.position,0x72e5ff,12)}u.dash=Math.max(0,(u.dash||0)-dt);
+  ray.setFromCamera(mouse,camera);ray.ray.intersectPlane(groundPlane,aim);player.rotation.y=Math.atan2(aim.x-player.position.x,aim.z-player.position.z);player.scale.setScalar(1+Math.sin(performance.now()*.008)*.025);ring.rotation.z+=dt*1.5;
+  if(state.wave<=state.waves&&state.alive===0&&state.spawned>0&&!state.boss){nextWave()}
+  if(state.wave===0&&state.alive===0)nextWave();
+  for(const e of [...enemies]){const to=new THREE.Vector3().subVectors(player.position,e.mesh.position);const dist=to.length();to.normalize();e.hit=Math.max(0,e.hit-dt);e.attack-=dt;if(dist>e.data.size+1.15)e.mesh.position.add(to.multiplyScalar(e.data.spd*dt));else if(e.attack<=0){e.attack=1.1;u.hp-=e.data.dmg;state.shake=.18;pop(player.position.clone().add(new THREE.Vector3(0,2,0)),"-"+e.data.dmg,0xff6f82);if(u.hp<=0)end(false)}e.mesh.rotation.y+=dt*1.7;e.mesh.children[0].material.emissiveIntensity=e.hit?2:0;e.mesh.children[0].material.emissive=e.hit?0xffffff:0;if(e.boss)$("bossFill").style.width=(Math.max(0,e.hp/e.max)*100)+"%"}
+  for(let i=projectiles.length-1;i>=0;i--){const p=projectiles[i];p.position.add(p.userData.v.clone().multiplyScalar(dt));p.userData.life-=dt;let hit=false;for(const e of [...enemies])if(p.position.distanceTo(e.mesh.position.clone().add(new THREE.Vector3(0,1,0)))<e.data.size+.45){damageEnemy(e,(p.userData.dmg*(u.power||1)));hit=true;break}if(hit||p.userData.life<=0){effects.remove(p);projectiles.splice(i,1)}}
+  for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.rotation.y+=dt*3;d.position.y=.5+Math.sin(performance.now()*.005+d.userData.spin)*.12;if(d.position.distanceTo(player.position)<1.35){if(d.userData.kind==="gold"){state.gold+=10}else u.hp=Math.min(u.max,u.hp+18);effects.remove(d);drops.splice(i,1);}}
+  for(let i=effects.children.length-1;i>=0;i--){const p=effects.children[i];if(p.userData.life){p.position.add(p.userData.v.clone().multiplyScalar(dt));p.userData.v.y-=8*dt;p.userData.life-=dt;if(p.userData.life<=0)effects.remove(p)}}
+  for(let i=popups.length-1;i>=0;i--){const q=popups[i];q.life-=dt;const v=q.pos.clone().project(camera);q.el.style.left=((v.x+1)/2*innerWidth)+"px";q.el.style.top=((-v.y+1)/2*innerHeight)+"px";q.el.style.opacity=Math.max(0,q.life/.7);q.pos.y+=dt*1.4;if(q.life<=0){q.el.remove();popups.splice(i,1)}}
+  $("hp").style.width=Math.max(0,u.hp/u.max*100)+"%";$("hpText").textContent="HP "+Math.ceil(u.hp)+" / "+u.max;$("xp").style.width=(u.xp/u.next*100)+"%";$("xpText").textContent="LV "+state.level+" · XP "+u.xp+" / "+state.next;$("levelText").textContent="처치 "+state.kills;$("goldText").textContent="◆ "+state.gold;$("actTitle").textContent=acts[state.act-1][0];$("actSub").textContent=acts[state.act-1][1];$("wave").textContent=state.boss?"보스 전투":("웨이브 "+Math.min(state.wave,state.waves)+" / "+state.waves+" · 생존 적 "+state.alive);
+}
+function loop(now){const dt=Math.min(.035,(now-last)/1000);last=now;update(dt);const target=new THREE.Vector3(player.position.x,0,player.position.z);camera.position.lerp(new THREE.Vector3(target.x,18,target.z+16),.08);camera.lookAt(target);if(state.shake>0){camera.position.x+=(Math.random()-.5)*state.shake;camera.position.z+=(Math.random()-.5)*state.shake;state.shake-=dt}renderer.render(scene,camera);requestAnimationFrame(loop)}loop(performance.now());
+</script>
+</body>
+</html>
