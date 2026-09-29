@@ -68,13 +68,23 @@ function makeWorld(){
 }
 makeWorld();
 
-const player=new THREE.Group(); player.position.set(0,0,0); actors.add(player);
-const body=new THREE.Mesh(new THREE.CapsuleGeometry(.48,.85,5,10),mat(0x2f8dcc));body.position.y=.95;body.castShadow=true;player.add(body);
-const jacket=new THREE.Mesh(new THREE.ConeGeometry(.78,1.15,8),mat(0x24508a));jacket.position.y=.62;jacket.castShadow=true;player.add(jacket);
-const hair=new THREE.Mesh(new THREE.SphereGeometry(.42,10,7),mat(0x9b6336));hair.scale.set(1.1,.55,1);hair.position.set(0,1.68,-.04);hair.castShadow=true;player.add(hair);
-const gauntlet=new THREE.Mesh(new THREE.BoxGeometry(.42,.5,.55),mat(0xd5a63a,1));gauntlet.position.set(.62,1.0,-.08);gauntlet.rotation.z=-.2;gauntlet.castShadow=true;player.add(gauntlet);
-const blade=new THREE.Mesh(new THREE.BoxGeometry(.12,.12,1.55),mat(0x9ff5ff,1));blade.position.set(.78,.98,-.45);blade.rotation.x=.2;blade.rotation.z=-.55;blade.castShadow=true;player.add(blade);
-const ring=new THREE.Mesh(new THREE.RingGeometry(.72,.82,32),new THREE.MeshBasicMaterial({color:0x67dffb,transparent:true,opacity:.35,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.02;player.add(ring);
+const player=new THREE.Group(); player.position.set(0,0,0); player.scale.setScalar(1.18); actors.add(player);
+// Ezreal-inspired explorer: layered silhouette, leather jacket, scarf, boots and a distinct golden arcane gauntlet.
+const legL=new THREE.Mesh(new THREE.CylinderGeometry(.13,.16,.62,8),mat(0x273858));legL.position.set(-.2,.42,0);legL.castShadow=true;player.add(legL);
+const legR=legL.clone();legR.position.x=.2;player.add(legR);
+const bootL=new THREE.Mesh(new THREE.BoxGeometry(.28,.18,.52),mat(0x6b3d2d));bootL.position.set(-.2,.1,-.12);bootL.castShadow=true;player.add(bootL);
+const bootR=bootL.clone();bootR.position.x=.2;player.add(bootR);
+const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.47,.72,6,12),mat(0x2d78b8));torso.position.y=1.03;torso.castShadow=true;player.add(torso);
+const vest=new THREE.Mesh(new THREE.BoxGeometry(.62,.68,.28),mat(0x16284a));vest.position.set(0,1.03,.31);vest.castShadow=true;player.add(vest);
+const belt=new THREE.Mesh(new THREE.BoxGeometry(.78,.12,.42),mat(0x9a6a31));belt.position.y=.72;belt.castShadow=true;player.add(belt);
+const head=new THREE.Mesh(new THREE.SphereGeometry(.38,14,10),mat(0xe0ad82));head.position.y=1.82;head.castShadow=true;player.add(head);
+const hair=new THREE.Mesh(new THREE.SphereGeometry(.43,12,8),mat(0x8d512e));hair.scale.set(1.1,.62,1);hair.position.set(0,2.02,-.03);hair.castShadow=true;player.add(hair);
+const scarf=new THREE.Mesh(new THREE.BoxGeometry(.72,.1,.14),mat(0xd7a342));scarf.position.set(0,1.48,-.08);scarf.rotation.z=-.08;scarf.castShadow=true;player.add(scarf);
+const shoulder=new THREE.Mesh(new THREE.SphereGeometry(.23,8,6),mat(0xd6a43c,1));shoulder.position.set(.43,1.35,-.02);shoulder.castShadow=true;player.add(shoulder);
+const gauntlet=new THREE.Mesh(new THREE.BoxGeometry(.43,.52,.58),mat(0xd5a63a,1));gauntlet.position.set(.63,1.06,-.18);gauntlet.rotation.z=-.18;gauntlet.castShadow=true;player.add(gauntlet);
+const gem=new THREE.Mesh(new THREE.OctahedronGeometry(.13,0),mat(0x7cecff,1));gem.position.set(.63,1.1,-.49);player.add(gem);
+const blade=new THREE.Mesh(new THREE.BoxGeometry(.1,.1,1.25),mat(0x9ff5ff,1));blade.position.set(.76,.98,-.7);blade.rotation.x=.2;blade.rotation.z=-.55;blade.castShadow=true;player.add(blade);
+const ring=new THREE.Mesh(new THREE.RingGeometry(.72,.82,32),new THREE.MeshBasicMaterial({color:0x67dffb,transparent:true,opacity:.42,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.02;player.add(ring);
 
 const enemies=[]; const projectiles=[]; const drops=[]; const popups=[];
 const types=[
@@ -84,7 +94,12 @@ const types=[
  {name:"붉은 덩굴정령",color:0xd43e39,hp:150,spd:1.0,dmg:24,size:1.15,xp:50},
  {name:"푸른 수호자",color:0x3f80d8,hp:180,spd:.9,dmg:27,size:1.25,xp:65}
 ];
-function enemyMesh(e){const g=new THREE.Group();const b=new THREE.Mesh(new THREE.IcosahedronGeometry(e.data.size,1),mat(e.data.color));b.position.y=e.data.size+.3;b.castShadow=true;g.add(b);const eye=new THREE.Mesh(new THREE.SphereGeometry(.12,8,8),mat(0xffd1a3,1));eye.position.set(0,e.data.size+.4,e.data.size*.7);g.add(eye);return g}
+function enemyMesh(e){const g=new THREE.Group();const n=e.data.name;const b=new THREE.Mesh(new THREE.IcosahedronGeometry(e.data.size,1),mat(e.data.color));b.position.y=e.data.size+.3;b.castShadow=true;g.add(b);
+  const eye=new THREE.Mesh(new THREE.SphereGeometry(.12,8,8),mat(n.includes("푸른")?0x72dfff:0xffd1a3,1));eye.position.set(0,e.data.size+.42,e.data.size*.7);g.add(eye);
+  if(n.includes("칼날")){for(let i=-1;i<=1;i++){const w=new THREE.Mesh(new THREE.ConeGeometry(.12,.65,5),mat(0xd88948,1));w.position.set(i*.28,e.data.size+.35,-.18);w.rotation.x=-.9;g.add(w)}}
+  if(n.includes("돌")){for(let i=0;i<4;i++){const s=new THREE.Mesh(new THREE.DodecahedronGeometry(.22,0),mat(0xb8a98a));const a=i*Math.PI/2;s.position.set(Math.cos(a)*e.data.size*.72,.65,Math.sin(a)*e.data.size*.72);g.add(s)}}
+  if(e.boss){const crown=new THREE.Mesh(new THREE.TorusGeometry(e.data.size*.7,.12,6,18),mat(0xff5d8c,1));crown.rotation.x=Math.PI/2;crown.position.y=e.data.size*2.1;g.add(crown)}
+  return g}
 function spawn(type=0,boss=false){
   const a=Math.random()*Math.PI*2,r=17+Math.random()*8; const d=boss?{name:"내셔 남작급 공허 군주",color:0xcc315e,hp:1100+state.act*420,spd:.85,dmg:28+state.act*4,size:2.1,xp:500}:types[Math.min(type,types.length-1)];
   const e={data:d,mesh:null,hp:d.hp,max:d.hp,hit:0,attack:0,boss};e.mesh=enemyMesh(e);e.mesh.position.set(Math.cos(a)*r,0,Math.sin(a)*r);actors.add(e.mesh);enemies.push(e);state.alive++; if(boss){state.boss=e;$("boss").style.display="block";$("bossName").textContent=d.name}
@@ -120,9 +135,9 @@ let last=performance.now();function update(dt){
   for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.rotation.y+=dt*3;d.position.y=.5+Math.sin(performance.now()*.005+d.userData.spin)*.12;if(d.position.distanceTo(player.position)<1.35){if(d.userData.kind==="gold"){state.gold+=10}else u.hp=Math.min(u.max,u.hp+18);effects.remove(d);drops.splice(i,1);}}
   for(let i=effects.children.length-1;i>=0;i--){const p=effects.children[i];if(p.userData.life){p.position.add(p.userData.v.clone().multiplyScalar(dt));p.userData.v.y-=8*dt;p.userData.life-=dt;if(p.userData.life<=0)effects.remove(p)}}
   for(let i=popups.length-1;i>=0;i--){const q=popups[i];q.life-=dt;const v=q.pos.clone().project(camera);q.el.style.left=((v.x+1)/2*innerWidth)+"px";q.el.style.top=((-v.y+1)/2*innerHeight)+"px";q.el.style.opacity=Math.max(0,q.life/.7);q.pos.y+=dt*1.4;if(q.life<=0){q.el.remove();popups.splice(i,1)}}
-  $("hp").style.width=Math.max(0,u.hp/u.max*100)+"%";$("hpText").textContent="HP "+Math.ceil(u.hp)+" / "+u.max;$("xp").style.width=(u.xp/u.next*100)+"%";$("xpText").textContent="LV "+state.level+" · XP "+u.xp+" / "+state.next;$("levelText").textContent="처치 "+state.kills;$("goldText").textContent="◆ "+state.gold;$("actTitle").textContent=acts[state.act-1][0];$("actSub").textContent=acts[state.act-1][1];$("wave").textContent=state.boss?"보스 전투":("웨이브 "+Math.min(state.wave,state.waves)+" / "+state.waves+" · 생존 적 "+state.alive);
+  $("hp").style.width=Math.max(0,u.hp/u.max*100)+"%";$("hpText").textContent="HP "+Math.ceil(u.hp)+" / "+u.max;$("xp").style.width=(state.xp/state.next*100)+"%";$("xpText").textContent="LV "+state.level+" · XP "+state.xp+" / "+state.next;$("levelText").textContent="처치 "+state.kills;$("goldText").textContent="◆ "+state.gold;$("actTitle").textContent=acts[state.act-1][0];$("actSub").textContent=acts[state.act-1][1];$("wave").textContent=state.boss?"보스 전투":("웨이브 "+Math.min(state.wave,state.waves)+" / "+state.waves+" · 생존 적 "+state.alive);
 }
-function loop(now){const dt=Math.min(.035,(now-last)/1000);last=now;update(dt);const target=new THREE.Vector3(player.position.x,0,player.position.z);camera.position.lerp(new THREE.Vector3(target.x,18,target.z+16),.08);camera.lookAt(target);if(state.shake>0){camera.position.x+=(Math.random()-.5)*state.shake;camera.position.z+=(Math.random()-.5)*state.shake;state.shake-=dt}renderer.render(scene,camera);requestAnimationFrame(loop)}loop(performance.now());
+function loop(now){const dt=Math.min(.035,(now-last)/1000);last=now;update(dt);const target=new THREE.Vector3(player.position.x,0,player.position.z);camera.position.lerp(new THREE.Vector3(target.x,12,target.z+11),.08);camera.lookAt(new THREE.Vector3(target.x,.45,target.z));if(state.shake>0){camera.position.x+=(Math.random()-.5)*state.shake;camera.position.z+=(Math.random()-.5)*state.shake;state.shake-=dt}renderer.render(scene,camera);requestAnimationFrame(loop)}loop(performance.now());
 </script>
 </body>
 </html>
