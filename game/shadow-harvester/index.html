@@ -80,6 +80,19 @@ const belt=new THREE.Mesh(new THREE.BoxGeometry(.78,.12,.42),mat(0x9a6a31));belt
 const head=new THREE.Mesh(new THREE.SphereGeometry(.38,14,10),mat(0xe0ad82));head.position.y=1.82;head.castShadow=true;player.add(head);
 const hair=new THREE.Mesh(new THREE.SphereGeometry(.43,12,8),mat(0x8d512e));hair.scale.set(1.1,.62,1);hair.position.set(0,2.02,-.03);hair.castShadow=true;player.add(hair);
 const scarf=new THREE.Mesh(new THREE.BoxGeometry(.72,.1,.14),mat(0xd7a342));scarf.position.set(0,1.48,-.08);scarf.rotation.z=-.08;scarf.castShadow=true;player.add(scarf);
+// Human facial features and articulated explorer silhouette.
+const earL=new THREE.Mesh(new THREE.SphereGeometry(.08,8,6),mat(0xd79c78));earL.position.set(-.37,1.82,0);player.add(earL);
+const earR=earL.clone();earR.position.x=.37;player.add(earR);
+const eyeMat=mat(0x17233c,1);
+const eyeL=new THREE.Mesh(new THREE.SphereGeometry(.045,8,6),eyeMat);eyeL.position.set(-.14,1.84,-.34);player.add(eyeL);
+const eyeR=eyeL.clone();eyeR.position.x=.14;player.add(eyeR);
+const nose=new THREE.Mesh(new THREE.ConeGeometry(.055,.16,6),mat(0xc68465));nose.rotation.x=-Math.PI/2;nose.position.set(0,1.78,-.38);player.add(nose);
+const armL=new THREE.Mesh(new THREE.CapsuleGeometry(.13,.56,5,8),mat(0x2f78b8));armL.position.set(-.52,1.08,-.02);armL.rotation.z=-.28;armL.castShadow=true;player.add(armL);
+const gloveL=new THREE.Mesh(new THREE.SphereGeometry(.16,8,6),mat(0x6b3d2d));gloveL.position.set(-.68,.82,-.07);player.add(gloveL);
+const armR=new THREE.Mesh(new THREE.CapsuleGeometry(.15,.5,5,8),mat(0x2f78b8));armR.position.set(.52,1.12,-.05);armR.rotation.z=.22;armR.castShadow=true;player.add(armR);
+const coatTailL=new THREE.Mesh(new THREE.BoxGeometry(.32,.8,.12),mat(0x17345f));coatTailL.position.set(-.25,.48,.28);coatTailL.rotation.z=-.12;coatTailL.castShadow=true;player.add(coatTailL);
+const coatTailR=coatTailL.clone();coatTailR.position.x=.25;coatTailR.rotation.z=.12;player.add(coatTailR);
+const shoulderL=new THREE.Mesh(new THREE.SphereGeometry(.2,8,6),mat(0xd6a43c,1));shoulderL.position.set(-.42,1.34,-.03);player.add(shoulderL);
 const shoulder=new THREE.Mesh(new THREE.SphereGeometry(.23,8,6),mat(0xd6a43c,1));shoulder.position.set(.43,1.35,-.02);shoulder.castShadow=true;player.add(shoulder);
 const gauntlet=new THREE.Mesh(new THREE.BoxGeometry(.43,.52,.58),mat(0xd5a63a,1));gauntlet.position.set(.63,1.06,-.18);gauntlet.rotation.z=-.18;gauntlet.castShadow=true;player.add(gauntlet);
 const gem=new THREE.Mesh(new THREE.OctahedronGeometry(.13,0),mat(0x7cecff,1));gem.position.set(.63,1.1,-.49);player.add(gem);
@@ -137,7 +150,7 @@ let last=performance.now();function update(dt){
   for(let i=popups.length-1;i>=0;i--){const q=popups[i];q.life-=dt;const v=q.pos.clone().project(camera);q.el.style.left=((v.x+1)/2*innerWidth)+"px";q.el.style.top=((-v.y+1)/2*innerHeight)+"px";q.el.style.opacity=Math.max(0,q.life/.7);q.pos.y+=dt*1.4;if(q.life<=0){q.el.remove();popups.splice(i,1)}}
   $("hp").style.width=Math.max(0,u.hp/u.max*100)+"%";$("hpText").textContent="HP "+Math.ceil(u.hp)+" / "+u.max;$("xp").style.width=(state.xp/state.next*100)+"%";$("xpText").textContent="LV "+state.level+" · XP "+state.xp+" / "+state.next;$("levelText").textContent="처치 "+state.kills;$("goldText").textContent="◆ "+state.gold;$("actTitle").textContent=acts[state.act-1][0];$("actSub").textContent=acts[state.act-1][1];$("wave").textContent=state.boss?"보스 전투":("웨이브 "+Math.min(state.wave,state.waves)+" / "+state.waves+" · 생존 적 "+state.alive);
 }
-function loop(now){const dt=Math.min(.035,(now-last)/1000);last=now;update(dt);const target=new THREE.Vector3(player.position.x,0,player.position.z);camera.position.lerp(new THREE.Vector3(target.x,12,target.z+11),.08);camera.lookAt(new THREE.Vector3(target.x,.45,target.z));if(state.shake>0){camera.position.x+=(Math.random()-.5)*state.shake;camera.position.z+=(Math.random()-.5)*state.shake;state.shake-=dt}renderer.render(scene,camera);requestAnimationFrame(loop)}loop(performance.now());
+function loop(now){const dt=Math.min(.035,(now-last)/1000);last=now;update(dt);const target=new THREE.Vector3(player.position.x,0,player.position.z);camera.position.lerp(new THREE.Vector3(target.x,8.5,target.z+8),.1);camera.lookAt(new THREE.Vector3(target.x,.8,target.z));if(state.shake>0){camera.position.x+=(Math.random()-.5)*state.shake;camera.position.z+=(Math.random()-.5)*state.shake;state.shake-=dt}renderer.render(scene,camera);requestAnimationFrame(loop)}loop(performance.now());
 </script>
 </body>
 </html>
