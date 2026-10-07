@@ -1,0 +1,21 @@
+{
+  "name": "hello-games-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Android wrapper for the hello-site games (Capacitor)",
+  "scripts": {
+    "build:www": "node build-www.mjs",
+    "sync": "npm run build:www && npx cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.0.0",
+    "three": "0.161.0",
+    "three-r128": "npm:three@0.128.0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "appId": "com.wonbi.hellogames",
+  "appName": "우리 게임방",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#0d0f14"
+  }
+}

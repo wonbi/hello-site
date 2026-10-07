@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>우리 게임방</title>
+<style>
+:root{--bg:#0d0f14;--card:#171a22;--line:#262b38;--text:#f1ece1;--sub:#a29a8b;--gold:#e7b85a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif}
+main{max-width:560px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
+h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
+h1 span{color:var(--gold)}
+p.lead{margin:0 0 22px;color:var(--sub);font-size:14px}
+a.game{display:flex;gap:14px;align-items:center;padding:14px;margin-bottom:12px;border-radius:16px;
+  background:var(--card);border:1px solid var(--line);color:inherit;text-decoration:none;transition:transform .12s}
+a.game:active{transform:scale(.98)}
+.ico{flex:none;width:60px;height:60px;border-radius:14px;display:grid;place-items:center;font-size:28px;font-weight:800;color:#fff}
+.name{font-size:17px;font-weight:700;margin-bottom:3px}
+.desc{font-size:13px;color:var(--sub);line-height:1.4}
+.go{margin-left:auto;color:var(--sub);font-size:22px}
+footer{margin-top:18px;font-size:12px;color:#6c6659;text-align:center}
+</style>
+</head>
+<body>
+<main>
+  <h1>우리 <span>게임방</span></h1>
+  <p class="lead">인터넷 없이도 바로 플레이할 수 있어요.</p>
+
+  <a class="game" href="games/gyeongsin/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#5b1d1d,#1b0d0d)">鬼</div>
+    <div><div class="name">경신역귀록</div><div class="desc">어둠 속 역귀를 베어 나가는 3D 액션</div></div>
+    <div class="go">›</div>
+  </a>
+  <a class="game" href="games/songpyeon/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#e58fb0,#8b4f9e)">●</div>
+    <div><div class="name">송편 연쇄</div><div class="desc">같은 색 송편 4개를 이어 터뜨리는 연쇄 퍼즐</div></div>
+    <div class="go">›</div>
+  </a>
+  <a class="game" href="games/gungnae/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#2f6b4f,#163626)">國</div>
+    <div><div class="name">국내성 전기</div><div class="desc">고구려 배경 3D RPG · 말 타기와 이동 부적</div></div>
+    <div class="go">›</div>
+  </a>
+  <a class="game" href="games/shadow-harvester/index.html">
+    <div class="ico" style="background:linear-gradient(135deg,#2a5d8a,#151d3b)">✦</div>
+    <div><div class="name">협곡의 그림자 수확자</div><div class="desc">몰려오는 몬스터를 뚫는 서바이벌 액션</div></div>
+    <div class="go">›</div>
+  </a>
+
+  <footer>게임 안에서 뒤로 가기를 누르면 이 화면으로 돌아와요.</footer>
+</main>
+<script>
+(function(){var C=window.Capacitor,A=C&&C.Plugins&&C.Plugins.App;if(!A)return;
+A.addListener('backButton',function(){A.exitApp();});})();
+</script>
+</body>
+</html>

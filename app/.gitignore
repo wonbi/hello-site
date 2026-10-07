@@ -1,0 +1,3 @@
+node_modules/
+# Rebuilt from ../game by build-www.mjs
+www/
