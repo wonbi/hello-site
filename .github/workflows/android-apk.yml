@@ -1,0 +1,69 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [main]
+    paths: ['app/**', 'game/**', '.github/workflows/android-apk.yml']
+  pull_request:
+    paths: ['app/**', 'game/**', '.github/workflows/android-apk.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+
+      - name: Install
+        run: npm ci
+
+      - name: Copy games into the app
+        run: npm run sync
+
+      - name: Build APK
+        working-directory: app/android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk ../woori-games.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: woori-games-apk
+          path: app/woori-games.apk
+
+      # On main, replace the "apk-latest" release so the newest APK always has the same download link.
+      - name: Publish release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete apk-latest --yes --cleanup-tag || true
+          gh release create apk-latest woori-games.apk \
+            --target "${{ github.sha }}" \
+            --title "우리 게임방 (안드로이드) #${{ github.run_number }}" \
+            --notes "폰에서 woori-games.apk를 눌러 받은 뒤 설치하세요. 처음 한 번은 '출처를 알 수 없는 앱 설치'를 허용해야 해요."
